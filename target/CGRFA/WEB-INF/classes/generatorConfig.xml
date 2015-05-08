@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+	<classPathEntry  location="/home/enrico/.m2/repository/postgresql/postgresql/9.1-901-1.jdbc4/postgresql-9.1-901-1.jdbc4.jar" />
+	
+	
+	<context id="DB2Tables" targetRuntime="MyBatis3">
+		
+		<jdbcConnection driverClass="org.postgresql.Driver"
+						connectionURL="jdbc:postgresql://168.202.54.158:5432/cgrfa"
+						userId="cgrfa" 
+						password="passw0rd">
+		</jdbcConnection>
+		
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+		<javaModelGenerator targetPackage="org.fao.fir.cgrfa.dao.mapper.model"  targetProject="src/main/java/">
+			<property name="enableSubPackages" value="false" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+
+		<sqlMapGenerator targetPackage="org.fao.fir.cgrfa.mybatis.mappers.generated" targetProject="src/main/resources/">
+			<property name="enableSubPackages" value="false" />
+		</sqlMapGenerator>
+
+		<javaClientGenerator type="XMLMAPPER" targetPackage="org.fao.fir.cgrfa.dao.mapper.client" targetProject="src/main/java/">
+			<property name="enableSubPackages" value="false" />
+		</javaClientGenerator>
+
+	<table schema="public" tableName="%"></table>
+<!-- 				 enableCountByExample="false"  -->
+<!-- 				 enableUpdateByExample="false" -->
+<!-- 				 enableDeleteByExample="false"  -->
+<!-- 				 enableSelectByExample="false" -->
+<!-- 				 selectByExampleQueryId="false" -->
+			 
+	
+		
+	</context>
+	
+	
+	
+</generatorConfiguration>

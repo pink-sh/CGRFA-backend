@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
+                http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee">
+  <display-name>Archetype Created Web Application</display-name>
+  	<servlet>
+        <servlet-name>org.fao.fir.cgrfa_application.cgrfa</servlet-name>
+        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+        <init-param>
+            <param-name>javax.ws.rs.Application</param-name>
+            <param-value>org.fao.fir.cgrfa.web.CGRFAApplication</param-value>
+        </init-param> 
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>org.fao.fir.cgrfa_application.cgrfa</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
+    <filter>
+	  <filter-name>CorsFilter</filter-name>
+	  <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
+	</filter>
+	<filter-mapping>
+	  <filter-name>CorsFilter</filter-name>
+	  <url-pattern>/*</url-pattern>
+	</filter-mapping>
+    <context-param>
+	    <description>This is the folder where to upload pdfs</description>
+	    <param-name>UploadFolder</param-name>
+	    <param-value>/tmp/CGRFA_Uploads</param-value>
+	</context-param>
+</web-app>

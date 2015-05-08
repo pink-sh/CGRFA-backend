@@ -1,0 +1,507 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.fao.fir.cgrfa.sql.PersistanceInterface">
+	<resultMap id="BaseResultMap" type="org.fao.fir.cgrfa.dao.mapper.model.Questions" >
+		<id column="ID" property="id" jdbcType="INTEGER" />
+	    <result column="order" property="order" jdbcType="INTEGER" />
+	    <result column="name_e" property="nameE" jdbcType="VARCHAR" />
+	    <result column="name_f" property="nameF" jdbcType="VARCHAR" />
+	    <result column="name_s" property="nameS" jdbcType="VARCHAR" />
+	    <result column="name_c" property="nameC" jdbcType="VARCHAR" />
+	    <result column="name_r" property="nameR" jdbcType="VARCHAR" />
+	    <result column="name_a" property="nameA" jdbcType="VARCHAR" />
+	    <result column="type" property="type" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<resultMap id="QuestionFields" type="org.fao.fir.cgrfa.dao.mapper.model.Questionsfields" >
+	    <id column="ID" property="id" jdbcType="INTEGER" />
+	    <result column="question_ID" property="questionId" jdbcType="INTEGER" />
+	    <result column="type" property="type" jdbcType="INTEGER" />
+	    <result column="text_e" property="textE" jdbcType="VARCHAR" />
+	    <result column="text_f" property="textF" jdbcType="VARCHAR" />
+	    <result column="text_s" property="textS" jdbcType="VARCHAR" />
+	    <result column="text_c" property="textC" jdbcType="VARCHAR" />
+	    <result column="text_r" property="textR" jdbcType="VARCHAR" />
+	    <result column="text_a" property="textA" jdbcType="VARCHAR" />
+	    <result column="name" property="name" jdbcType="VARCHAR" />
+	    <result column="controlled_list" property="controlledList" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<resultMap id="TableColumnsResultMap" type="org.fao.fir.cgrfa.dao.mapper.model.Questionstablescolumns" >
+	    <id column="ID" property="id" jdbcType="INTEGER" />
+	    <result column="table_id" property="tableId" jdbcType="INTEGER" />
+	    <result column="order" property="order" jdbcType="INTEGER" />
+	    <result column="header_e" property="headerE" jdbcType="VARCHAR" />
+	    <result column="header_f" property="headerF" jdbcType="VARCHAR" />
+	    <result column="header_s" property="headerS" jdbcType="VARCHAR" />
+	    <result column="header_c" property="headerC" jdbcType="VARCHAR" />
+	    <result column="header_r" property="headerR" jdbcType="VARCHAR" />
+	    <result column="header_a" property="headerA" jdbcType="VARCHAR" />
+  	</resultMap>
+  	
+  	<resultMap id="TableRowsResultMap" type="org.fao.fir.cgrfa.dao.mapper.model.Questionstablesrows" >
+	    <id column="ID" property="id" jdbcType="INTEGER" />
+	    <result column="multi" property="multi" jdbcType="SMALLINT" />
+	    <result column="table_ID" property="tableId" jdbcType="INTEGER" />
+	    <result column="order" property="order" jdbcType="INTEGER" />
+	    <result column="name" property="name" jdbcType="VARCHAR" />
+ 	</resultMap>
+ 	
+ 	<resultMap id="TableResultMap" type="org.fao.fir.cgrfa.dao.mapper.model.Questionstables" >
+	    <id column="ID" property="id" jdbcType="INTEGER" />
+	    <result column="name" property="name" jdbcType="VARCHAR" />
+	    <result column="columns" property="columns" jdbcType="INTEGER" />
+	    <result column="rows" property="rows" jdbcType="INTEGER" />
+  	</resultMap>
+  	
+  	<resultMap id="TableCellFields" type="org.fao.fir.cgrfa.dao.mapper.model.Questionstablesfields" >
+	    <id column="ID" property="id" jdbcType="INTEGER" />
+	    <result column="table_id" property="tableId" jdbcType="INTEGER" />
+	    <result column="column_id" property="columnId" jdbcType="INTEGER" />
+	    <result column="row_id" property="rowId" jdbcType="INTEGER" />
+	    <result column="type" property="type" jdbcType="INTEGER" />
+	    <result column="text_e" property="textE" jdbcType="VARCHAR" />
+	    <result column="text_f" property="textF" jdbcType="VARCHAR" />
+	    <result column="text_s" property="textS" jdbcType="VARCHAR" />
+	    <result column="text_c" property="textC" jdbcType="VARCHAR" />
+	    <result column="text_r" property="textR" jdbcType="VARCHAR" />
+	    <result column="text_a" property="textA" jdbcType="VARCHAR" />
+	    <result column="name" property="name" jdbcType="VARCHAR" />
+	    <result column="controlled_list" property="controlledList" jdbcType="INTEGER" />
+    	<result column="default_value" property="defaultValue" jdbcType="VARCHAR" />
+  	</resultMap>
+  	
+  	<resultMap id="TableRows" type="org.fao.fir.cgrfa.dao.mapper.model.Questionstablesrows" >
+	    <id column="ID" property="id" jdbcType="INTEGER" />
+	    <result column="multi" property="multi" jdbcType="SMALLINT" />
+	    <result column="table_ID" property="tableId" jdbcType="INTEGER" />
+	    <result column="order" property="order" jdbcType="INTEGER" />
+	    <result column="name" property="name" jdbcType="VARCHAR" />
+	</resultMap>
+  	
+  	<resultMap id="QuestionFieldsMap" type="org.fao.fir.cgrfa.dao.mapper.model.Questionsfields">
+	    <id column="ID" jdbcType="INTEGER" property="id" />
+	    <result column="question_ID" jdbcType="INTEGER" property="questionId" />
+	    <result column="type" jdbcType="INTEGER" property="type" />
+	    <result column="text_e" jdbcType="VARCHAR" property="textE" />
+	    <result column="text_f" jdbcType="VARCHAR" property="textF" />
+	    <result column="text_s" jdbcType="VARCHAR" property="textS" />
+	    <result column="text_c" jdbcType="VARCHAR" property="textC" />
+	    <result column="text_r" jdbcType="VARCHAR" property="textR" />
+	    <result column="text_a" jdbcType="VARCHAR" property="textA" />
+	    <result column="name" jdbcType="VARCHAR" property="name" />
+	    <result column="controlled_list" jdbcType="INTEGER" property="controlledList" />
+	</resultMap>
+  	
+  	<resultMap id="ControlledList" type="org.fao.fir.cgrfa.dao.mapper.model.Controlledlists" >
+	    <id column="pk" property="pk" jdbcType="INTEGER" />
+	    <result column="cl_id" property="clId" jdbcType="INTEGER" />
+	    <result column="key" property="key" jdbcType="VARCHAR" />
+	    <result column="value" property="value" jdbcType="VARCHAR" />
+	    <result column="text_e" property="textE" jdbcType="VARCHAR" />
+	    <result column="text_f" property="textF" jdbcType="VARCHAR" />
+	    <result column="text_s" property="textS" jdbcType="VARCHAR" />
+	    <result column="text_c" property="textC" jdbcType="VARCHAR" />
+	    <result column="text_r" property="textR" jdbcType="VARCHAR" />
+	    <result column="text_a" property="textA" jdbcType="VARCHAR" />
+	    <result column="external_cl" property="externalCl" jdbcType="VARCHAR" />
+	    <result column="external_cl_key" property="externalClKey" jdbcType="VARCHAR" />
+	    <result column="external_cl_value" property="externalClValue" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="ExternalControlledList" type="org.fao.fir.cgrfa.objects.ControlledEntry" >
+	    <result column="key" property="key" jdbcType="VARCHAR" />
+	    <result column="value" property="text_e" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="CountryMap" type="org.fao.fir.cgrfa.dao.mapper.model.Countries">
+	    <id column="ID" jdbcType="INTEGER" property="id" />
+	    <result column="NAME_EN" jdbcType="VARCHAR" property="nameEn" />
+	    <result column="NAME_FR" jdbcType="VARCHAR" property="nameFr" />
+	    <result column="NAME_ES" jdbcType="VARCHAR" property="nameEs" />
+	    <result column="NAME_RU" jdbcType="VARCHAR" property="nameRu" />
+	    <result column="NAME_AR" jdbcType="VARCHAR" property="nameAr" />
+	    <result column="NAME_ZH" jdbcType="VARCHAR" property="nameZh" />
+	    <result column="ISO2" jdbcType="VARCHAR" property="iso2" />
+	    <result column="ISO3" jdbcType="VARCHAR" property="iso3" />
+	</resultMap>
+	
+	<resultMap id="QuestionsMap" type="org.fao.fir.cgrfa.dao.mapper.model.Questions">
+	    <id column="ID" jdbcType="INTEGER" property="id" />
+	    <result column="order" jdbcType="INTEGER" property="order" />
+	    <result column="name_e" jdbcType="VARCHAR" property="nameE" />
+	    <result column="name_f" jdbcType="VARCHAR" property="nameF" />
+	    <result column="name_s" jdbcType="VARCHAR" property="nameS" />
+	    <result column="name_c" jdbcType="VARCHAR" property="nameC" />
+	    <result column="name_r" jdbcType="VARCHAR" property="nameR" />
+	    <result column="name_a" jdbcType="VARCHAR" property="nameA" />
+	    <result column="type" jdbcType="INTEGER" property="type" />
+	    <result column="title" jdbcType="VARCHAR" property="title" />
+	</resultMap>
+	
+	<resultMap id="SurveyMap" type="org.fao.fir.cgrfa.dao.mapper.model.Survey">
+	    <id column="ID" property="id" jdbcType="INTEGER" />
+	    <result column="date" property="date" jdbcType="DATE" />
+	    <result column="country" property="country" jdbcType="INTEGER" />
+	    <result column="name" property="name" jdbcType="VARCHAR" />
+	    <result column="prepared_by" property="preparedBy" jdbcType="VARCHAR" />
+	    <result column="deleted" property="deleted" jdbcType="INTEGER" />
+    	<result column="inserted_date" property="insertedDate" jdbcType="DATE" />
+    	<result column="modified_date" property="modifiedDate" jdbcType="DATE" />
+	</resultMap>
+	
+	<resultMap id="SurveyAnswersMap" type="org.fao.fir.cgrfa.dao.mapper.model.Surveyanswers">
+	    <id column="ID" property="id" jdbcType="INTEGER" />
+	    <result column="survey_id" property="surveyId" jdbcType="INTEGER" />
+	    <result column="field_id" property="fieldId" jdbcType="INTEGER" />
+	    <result column="table_id" property="tableId" jdbcType="INTEGER" />
+	    <result column="field" property="field" jdbcType="VARCHAR" />
+	    <result column="value" property="value" jdbcType="VARCHAR" />
+	    <result column="table_row_id" property="tableRowId" jdbcType="INTEGER" />
+	    <result column="table_row_multi_sort" property="tableRowMultiSort" jdbcType="INTEGER" />
+	    <result column="deleted" property="deleted" jdbcType="INTEGER" />
+	</resultMap>
+
+	
+	<resultMap id="SurveyStatusMap" type="org.fao.fir.cgrfa.dao.mapper.model.Surveystatus" >
+	    <id column="ID" property="id" jdbcType="INTEGER" />
+	    <result column="survey_id" property="surveyId" jdbcType="INTEGER" />
+	    <result column="question_id" property="questionId" jdbcType="INTEGER" />
+	    <result column="status" property="status" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<resultMap id="QuestionTypes" type="org.fao.fir.cgrfa.dao.mapper.model.Questiontype" >
+	    <id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+	</resultMap>
+	<!--   SYSTEM QUERIES - START -->
+	<select id="testMe" parameterType="int" resultMap="BaseResultMap">
+		SELECT * FROM "Questions" where "ID" = #{id}
+	</select>
+	
+	<select id="getAllQuestions" parameterType="int" resultMap="BaseResultMap">
+		SELECT * FROM "Questions" order by "order"
+	</select>
+	
+	<select id="getQuestionFieldsById" parameterType="int" resultMap="QuestionFields">
+		SELECT * FROM "QuestionsFields" where "question_ID" = #{id}
+	</select>
+	
+	<select id="getQuestionTypes" resultMap="QuestionTypes">
+		SELECT * FROM "QuestionType"
+	</select>
+	
+	<select id="getTableByName" resultMap="TableResultMap">
+		SELECT * from "QuestionsTables" WHERE name = #{name}
+	</select>
+	
+	<select id="getTableColumnsById" parameterType="int" resultMap="TableColumnsResultMap">
+		SELECT * FROM "QuestionsTablesColumns" where table_id = #{id} order by "order";
+	</select>
+	
+	<select id="getTableColumnsByName" resultMap="TableColumnsResultMap">
+		SELECT * FROM "QuestionsTablesColumns" where table_id = (SELECT "ID" from "QuestionsTables" WHERE name = #{name}) order by "order"
+	</select>
+	
+	<select id="getTableRowsById" parameterType="int" resultMap="TableRowsResultMap">
+		SELECT * FROM "QuestionsTablesRows" where "table_ID" = #{id};
+	</select>
+	
+	<select id="getTableRowsByName" resultMap="TableRowsResultMap">
+		SELECT * FROM "QuestionsTablesRows" where "table_ID" = (SELECT "ID" from "QuestionsTables" WHERE name = #{name}) order by "order";
+	</select>
+	
+	<select id="getTableRowByNameTableName" resultMap="TableRowsResultMap">
+		SELECT * FROM "QuestionsTablesRows" where "table_ID" = (SELECT "ID" from "QuestionsTables" WHERE name = #{table_name}) AND "name" = #{row_name} order by "order";
+	</select> 
+	
+	<select id="getCellFieldsByCoordinates" resultMap="TableCellFields">
+		SELECT * FROM "QuestionsTablesFields" where "table_id" = #{table_id} and "column_id" = #{column_id} and "row_id" = #{row_id};
+  	</select>
+  	
+  	<select id="getCellFieldByTableRowAndName" resultMap="TableCellFields">
+		SELECT * FROM "QuestionsTablesFields" where "table_id" = #{table_id} and "row_id" = #{row_id} and "name" = #{name};
+  	</select>
+  	
+  	<select id="getDistinctControlledListIds" resultType="int">
+  		SELECT distinct(cl_id) FROM "ControlledLists" order by cl_id;
+  	</select>
+  	
+  	<select id="getControlledList" parameterType="int" resultMap="ControlledList">
+  		SELECT * FROM "ControlledLists" WHERE "cl_id" = #{id} ORDER BY "value"
+  	</select>
+  	
+  	<select id="getExternalControlledList" resultMap="ExternalControlledList">
+  		SELECT "${key}" as key, "${value}" as value FROM "${table}"
+  	</select>
+	
+	<select id="getCountry" resultMap="CountryMap">
+  		SELECT * FROM "Countries" WHERE "ISO2" = #{ID} OR "ISO3" = #{ID}
+  	</select>
+  	
+  	<select id="getCountryById" resultMap="CountryMap">
+  		SELECT * FROM "Countries" WHERE "ID" = #{ID}
+  	</select>
+  	
+  	<select id="getQuestions" resultMap="QuestionsMap">
+  		SELECT * FROM "Questions" ORDER BY "order"
+  	</select>
+  	
+  	<select id="getFormFieldByNameAndQuestion" resultMap="QuestionFieldsMap">
+  		SELECT * FROM "QuestionsFields" WHERE "question_ID" = #{ID} AND "name" = #{name}
+  	</select>
+  	
+  	<select id="getSurveyAnswerById" resultMap="SurveyAnswersMap">
+  	<![CDATA[ 
+  		SELECT * FROM "SurveyAnswers" WHERE 
+  		"ID" = #{ID} AND "deleted" < 1
+  	]]>
+  	</select>
+  	
+  	<select id="getSurveyFieldAnswerTop" resultMap="SurveyAnswersMap">
+  	<![CDATA[ 
+  		SELECT * FROM "SurveyAnswers" WHERE 
+  		"survey_id" = #{survey_id} AND 
+  		"field_id" = #{field_id} AND 
+  		"table_id" is null AND "deleted" < 1
+  		limit 1
+  	]]>	
+  	</select>
+  	
+  	<select id="getAllSurvey" resultMap="SurveyMap">
+  	<![CDATA[ 
+  		SELECT * FROM "Survey" WHERE "deleted" < 1 ORDER BY "date"
+  	]]>
+  	</select>
+  	
+  	<select id="getSurveyHeadersById" resultMap="SurveyMap">
+  	<![CDATA[ 
+  		SELECT * FROM "Survey" WHERE "ID" = #{ID} AND "deleted" < 1
+  	]]>
+  	</select>
+  	
+  	<select id="getSurveyHeadersByCountry" resultMap="SurveyMap">
+  	<![CDATA[ 
+  		SELECT * FROM "Survey" WHERE "country" = #{country} AND "deleted" < 1
+  	]]>
+  	</select>
+  	
+  	<select id="getSurveyInsertedByDelta" resultMap="SurveyMap">
+  	<![CDATA[
+  		SELECT * FROM "Survey" WHERE "inserted_date" > NOW() - interval '1 day' * #{days}
+  	]]>
+  	</select>
+  	
+  	<select id="getSurveyModifiedByDelta" resultMap="SurveyMap">
+  	<![CDATA[
+  		SELECT * FROM "Survey" WHERE "modified_date" > NOW() - interval '1 day' * #{days}
+  	]]>
+  	</select>
+  	
+  	<select id="getAnswersNextRowsByField" resultMap="SurveyAnswersMap">
+  	<![CDATA[
+  		SELECT * FROM "SurveyAnswers" 
+		WHERE 
+		"survey_id" = #{survey_id} AND
+		"table_id" = #{table_id} AND
+		"field_id" = #{field_id} AND
+		"table_row_id" = #{row_id} AND
+		"table_row_multi_sort" > #{delta} AND
+		"deleted" < 1
+  	]]>
+  	</select>
+  	
+  	<select id="getSurveyFieldAnswerRow" resultMap="SurveyAnswersMap">
+  	<![CDATA[ 
+  		SELECT * from "SurveyAnswers" WHERE 
+  		"table_id" = #{table_id} AND
+  		"table_row_id" = #{row_id} AND
+  		"survey_id" = #{survey_id} AND
+  		"field_id" = #{field_id} AND "deleted" < 1
+  		LIMIT 1
+  	]]>
+  	</select>
+  	
+  	<select id="getSurveyFieldAnswerMultiRow" resultMap="SurveyAnswersMap">
+  	<![CDATA[ 
+  		SELECT * from "SurveyAnswers" WHERE 
+  		"table_row_multi_sort" = #{counter} AND
+  		"table_id" = #{table_id} AND
+  		"table_row_id" = #{row_id} AND
+  		"survey_id" = #{survey_id} AND
+  		"field_id" = #{field_id} AND "deleted" < 1
+  		LIMIT 1
+  	]]>
+  	</select>
+  	
+  	<select id="getSurveyAnswersBySurveyId" resultMap="SurveyAnswersMap">
+  	<![CDATA[ 
+  		SELECT * from "SurveyAnswers" WHERE 
+  		"survey_id" = #{survey_id} AND "deleted" < 1
+  	]]>
+  	</select>
+  	
+  	<select id="getQuestionStatus" resultMap="SurveyStatusMap">
+  		SELECT * from "SurveyStatus" WHERE 
+  		"survey_id" = #{survey_id} AND
+  		"question_id" = #{question_id}
+  		LIMIT 1
+  	</select>
+  	
+  	<select id="getStatusCountBySurvey" resultType="integer">
+  		SELECT count(*) as count from "SurveyStatus" WHERE 
+  		"survey_id" = #{survey_id} AND
+  		"status" = #{status}
+  	</select>
+  	
+  	<select id="getNumberOfInsertedMultiRows" resultType="integer">
+  	<![CDATA[ 
+  		select max(table_row_multi_sort) from "SurveyAnswers" where table_id = #{table_id} and table_row_id = #{row_id} and survey_id = #{survey_id} AND "deleted" < 1;
+  	]]>
+  	</select>
+  	
+  	<select id="getSelectedValues" resultType="hashmap">
+  	<![CDATA[ 
+		select a.value as selected_value, c.value as original_value, c.text_e as text 
+		from "SurveyAnswers" a left join "QuestionsTablesFields" b
+		on a.field_id = b."ID"
+		left join "ControlledLists" c
+		on c."cl_id" = b."controlled_list"
+		where
+		a.survey_id = #{survey_id}
+		and a."ID"= #{field_id} AND a."deleted" < 1
+	]]>
+	</select>
+	
+	<select id="getAnwerQuestion" resultType="hashmap">
+	<![CDATA[ 
+		select a."ID" as id, a."value" as value, a."field" as field,
+		b."text_e" as text_e, b."text_f" as text_f, b."text_s" as text_s, 
+		b."text_c" as text_c, b."text_r" as text_r, b."text_a" as text_a
+		from "SurveyAnswers" a left join "QuestionsTablesFields" b
+		on a."field_id" = b."ID"
+		where a."ID" = #{ID} AND a."deleted" < 1
+	]]>
+  	</select>
+  	
+  	<select id="getTableQuestionByAnswerId" resultMap="TableCellFields">
+  		SELECT * FROM "QuestionsTablesFields" WHERE "ID" = (SELECT "field_id" FROM "SurveyAnswers" where "ID" = #{answer_id})
+  	</select>
+  	
+  	<select id="getMaxRowForTable" resultType="int">
+  	<![CDATA[ 
+  		SELECT max("table_row_multi_sort") as max_row
+		  FROM "SurveyAnswers" WHERE 
+			"survey_id" = #{survey_id} AND 
+			"ID"= #{id} AND 
+			"table_id" = #{table_id} AND 
+			"table_row_id" = #{row_id} AND "deleted" < 1;
+	]]>
+  	</select>
+ 	
+  	<insert id="insertSurvey" parameterType="org.fao.fir.cgrfa.dao.mapper.model.Survey" useGeneratedKeys="true" keyProperty="id" keyColumn="ID">
+	    insert into "Survey" (country, name, prepared_by,
+	      date, inserted_date, modified_date)
+	    values (#{country,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{preparedBy,jdbcType=VARCHAR},
+	      #{date,jdbcType=DATE}, #{insertedDate,jdbcType=DATE}, #{modifiedDate,jdbcType=DATE})
+    </insert>
+    
+    <insert id="insertSurveyAnswer" parameterType="org.fao.fir.cgrfa.dao.mapper.model.Surveyanswers" useGeneratedKeys="true" keyProperty="id" keyColumn="ID">
+	    insert into "SurveyAnswers" (survey_id, field_id, 
+	      table_id, field, value, 
+      	  table_row_id, table_row_multi_sort)
+	    values (#{surveyId,jdbcType=INTEGER}, #{fieldId,jdbcType=INTEGER}, 
+	      #{tableId,jdbcType=INTEGER}, #{field,jdbcType=VARCHAR}, #{value,jdbcType=VARCHAR}, 
+      	  #{tableRowId,jdbcType=INTEGER}, #{tableRowMultiSort,jdbcType=INTEGER})
+	</insert>
+	 
+	<insert id="insertSurveyDefaultStatus" parameterType="org.fao.fir.cgrfa.dao.mapper.model.Surveystatus"  useGeneratedKeys="true" keyProperty="id" keyColumn="ID">
+	    insert into "SurveyStatus" (survey_id, question_id)
+	    values (#{surveyId,jdbcType=INTEGER}, #{questionId,jdbcType=INTEGER})
+    </insert>
+    
+    <insert id="insertSurveyStatus" parameterType="org.fao.fir.cgrfa.dao.mapper.model.Surveystatus"  useGeneratedKeys="true" keyProperty="id" keyColumn="ID">
+	    insert into "SurveyStatus" (survey_id, question_id, status)
+	    values (#{surveyId,jdbcType=INTEGER}, #{questionId,jdbcType=INTEGER}, #{status,jdbcType=INTEGER})
+    </insert>
+    
+    <update id="deleteSurvey">
+    	UPDATE "Survey" SET "deleted" = 1 WHERE "ID" = #{id}
+    </update>
+    
+    <update id="updateQuestionStatus" parameterType="org.fao.fir.cgrfa.dao.mapper.model.Surveystatus" >
+	    update "SurveyStatus"
+	    <set >
+	      <if test="surveyId != null" >
+	        survey_id = #{surveyId,jdbcType=INTEGER},
+	      </if>
+	      <if test="questionId != null" >
+	        question_id = #{questionId,jdbcType=INTEGER},
+	      </if>
+	      <if test="status != null" >
+	        status = #{status,jdbcType=INTEGER},
+	      </if>
+	    </set>
+	    where "ID" = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateSurveyAnswerByPrimaryKeySelective" parameterType="org.fao.fir.cgrfa.dao.mapper.model.Surveyanswers" >
+	    update "SurveyAnswers"
+	    <set >
+	      <if test="surveyId != null" >
+	        "survey_id" = #{surveyId,jdbcType=INTEGER},
+	      </if>
+	      <if test="fieldId != null" >
+	        "field_id" = #{fieldId,jdbcType=INTEGER},
+	      </if>
+	      <if test="tableId != null" >
+	        "table_id" = #{tableId,jdbcType=INTEGER},
+	      </if>
+	      <if test="field != null" >
+	        "field" = #{field,jdbcType=VARCHAR},
+	      </if>
+	      <if test="value != null" >
+	        "value" = #{value,jdbcType=VARCHAR},
+	      </if>
+	      <if test="tableRowId != null" >
+	        "table_row_id" = #{tableRowId,jdbcType=INTEGER},
+	      </if>
+	      <if test="tableRowMultiSort != null" >
+	        "table_row_multi_sort" = #{tableRowMultiSort,jdbcType=INTEGER},
+	      </if>
+	      <if test="deleted != null" >
+        	"deleted" = #{deleted,jdbcType=INTEGER},
+      	  </if>
+	    </set>
+	    where "ID" = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateSurveyByPrimaryKeySelective" parameterType="org.fao.fir.cgrfa.dao.mapper.model.Survey" >
+	    update "Survey"
+	    <set >
+	      <if test="date != null" >
+	        "date" = #{date,jdbcType=DATE},
+	      </if>
+	      <if test="country != null" >
+	        "country" = #{country,jdbcType=INTEGER},
+	      </if>
+	      <if test="name != null" >
+	        "name" = #{name,jdbcType=VARCHAR},
+	      </if>
+	      <if test="preparedBy != null" >
+	        "prepared_by" = #{preparedBy,jdbcType=VARCHAR},
+	      </if>
+	      <if test="deleted != null" >
+	        "deleted" = #{deleted,jdbcType=INTEGER},
+	      </if>
+	      <if test="insertedDate != null" >
+	        "inserted_date" = #{insertedDate,jdbcType=DATE},
+	      </if>
+	      <if test="modifiedDate != null" >
+	        "modified_date" = #{modifiedDate,jdbcType=DATE},
+	      </if>
+	    </set>
+	    where "ID" = #{id,jdbcType=INTEGER}
+	  </update>
+	
+</mapper>
