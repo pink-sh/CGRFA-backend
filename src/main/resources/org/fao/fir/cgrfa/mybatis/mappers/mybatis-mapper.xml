@@ -270,7 +270,7 @@
   	
   	<select id="getAllSurvey" resultMap="SurveyMap">
   	<![CDATA[ 
-  		SELECT * FROM "Survey" WHERE "deleted" < 1 ORDER BY "date"
+  		SELECT a.* FROM "Survey" a left join "Countries" b on a.country = b."ID" WHERE a."deleted" < 1 ORDER BY b."NAME_EN"
   	]]>
   	</select>
   	
