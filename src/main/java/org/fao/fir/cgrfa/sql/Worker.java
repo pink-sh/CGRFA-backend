@@ -160,6 +160,7 @@ public class Worker {
 				
 				if (type == 8) {
 					Table table = new Table();
+					table.setMultiCount(0);
 					table.setName(qf.getName());
 					Questionstables dbTab = in.getTableByName(qf.getName());
 					List<Questionstablescolumns> qtc = in.getTableColumnsById(dbTab.getId());
@@ -200,6 +201,9 @@ public class Worker {
 					for (Questionstablesrows row : qtr) {
 						TableRow tableRow = new TableRow();
 						tableRow.setName(row.getName());
+						if (row.getMulti() > 0) {
+							table.setMultiCount(table.getMultiCount() + 1);
+						}
 						tableRow.setMulti(row.getMulti());
 						LinkedList<TableCell> tableCells = new LinkedList<TableCell>();
 						for (Questionstablescolumns col : qtc) {
@@ -308,6 +312,7 @@ public class Worker {
 				
 				if (type == 8) {
 					Table table = new Table();
+					table.setMultiCount(0);
 					table.setName(qf.getName());
 					Questionstables dbTab = in.getTableByName(qf.getName());
 					List<Questionstablescolumns> qtc = in.getTableColumnsById(dbTab.getId());
@@ -353,6 +358,9 @@ public class Worker {
 								TableRow tableRow = new TableRow();
 								tableRow.setName(row.getName());
 								tableRow.setMulti(row.getMulti());
+								if (row.getMulti() > 0) {
+									table.setMultiCount(table.getMultiCount() + 1);
+								}
 								int rowCounter = xx + 1;
 								LinkedList<TableCell> tableCells = new LinkedList<TableCell>();
 								for (Questionstablescolumns col : qtc) {
@@ -743,6 +751,14 @@ public class Worker {
 		in.updateSurveyByPrimaryKeySelective(survey);
 	}
 	
+	public void updateSurveyByHeaders (int survey_id, Headers headers) {
+		Survey survey = in.getSurveyHeadersById(survey_id);
+		survey.setPreparedBy(headers.getPreparedBy());
+		survey.setCountry(headers.getCountry().getId());
+		survey.setDate(headers.getDate());
+		in.updateSurveyByPrimaryKeySelective(survey);
+	}
+	
 	public void deleteSurvey(int survey_id) {
 		in.deleteSurvey(survey_id);
 	}
@@ -856,6 +872,31 @@ public class Worker {
 		}
 	}
 	
+	public Headers getHeadersFromJsonResponse(String json) throws JsonProcessingException, IOException, ParseException {
+		Headers headers = new Headers();
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode node = mapper.readTree(json);
+		
+		DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+		
+		headers.setDate(df.parse(node.get("headers").get("date").asText()));
+		headers.setPreparedBy(node.get("headers").get("preparedBy").asText());
+		
+		Country country = new Country();
+		country.setId(node.get("headers").get("country").get("id").asInt());
+		country.setIso2(node.get("headers").get("country").get("iso2").asText());
+		country.setIso3(node.get("headers").get("country").get("iso3").asText());
+		country.setNameAr(node.get("headers").get("country").get("nameAr").asText());
+		country.setNameEs(node.get("headers").get("country").get("nameEs").asText());
+		country.setNameEn(node.get("headers").get("country").get("nameEn").asText());
+		country.setNameFr(node.get("headers").get("country").get("nameFr").asText());
+		country.setNameRu(node.get("headers").get("country").get("nameRu").asText());
+		country.setNameZh(node.get("headers").get("country").get("nameZh").asText());
+		headers.setCountry(country);
+		
+		return headers;
+	}
+	
 	public AnswersList prepareAnswers(String json) throws JsonProcessingException, IOException, ParseException {
 		if (json == null) {
 			return null;
@@ -961,8 +1002,6 @@ public class Worker {
 				answersList.setStatus(statusList);
             }
 		}
-		
-		
 		return answersList;
 	}
 	

@@ -42,6 +42,7 @@ import org.fao.fir.cgrfa.objects.PDFQuestionList;
 import org.fao.fir.cgrfa.objects.Questionnaire;
 import org.fao.fir.cgrfa.objects.UploadedFile;
 import org.fao.fir.cgrfa.objects.json.AnswersList;
+import org.fao.fir.cgrfa.objects.json.Headers;
 import org.fao.fir.cgrfa.objects.json.SurveyList;
 import org.fao.fir.cgrfa.sql.Worker;
 import org.glassfish.jersey.media.multipart.ContentDisposition;
@@ -129,9 +130,11 @@ public class CGRFA {
 	
 		try {
 			AnswersList list = w.prepareAnswers(data);
+			Headers headers = w.getHeadersFromJsonResponse(data);
 			w.persistAnswers(list.getSurvey_id(), list.getAnswers());
 			w.persistStatus(list.getSurvey_id(), list.getStatus());
 			w.updateSurveyDate(list.getSurvey_id());
+			w.updateSurveyByHeaders(list.getSurvey_id(), headers);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return Response.status(500).build();
