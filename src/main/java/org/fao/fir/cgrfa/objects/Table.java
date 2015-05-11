@@ -16,5 +16,7 @@ public @Data class Table {
 	LinkedList<String> header_z;
 	String ratio;
 	String width;
+	
+	int multiCount;
 }
 
