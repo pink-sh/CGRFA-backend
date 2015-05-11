@@ -124,6 +124,15 @@ public class CGRFA {
 		}
 	}
 	
+	@GET
+	@Path("deleteSurvey/{id}")
+	public Response deleteSurvey(@PathParam("id") String id) {
+		Worker w = new Worker();
+		w.deleteSurvey(Integer.parseInt(id));
+		return Response.ok().build();
+	}
+	
+	
 	@POST
 	@Path("SaveSurvey/")
 	@Consumes(MediaType.APPLICATION_JSON)	

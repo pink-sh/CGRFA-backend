@@ -638,23 +638,25 @@ public class Worker {
 			
 			if (answer.getMultipleQuestion() != null) {
 				for (PDFField sField : answer.getMultipleQuestion()) {
-					String field = sField.getName();
-					String value = sField.getValue();
-					Questionsfields sFld = in.getFormFieldByNameAndQuestion(questionId, field);
-					if (sFld != null) {
-						Surveyanswers sa = new Surveyanswers();
-						sa.setSurveyId(surveyId.intValue());
-						sa.setField(field);
-						sa.setValue(value);
-						sa.setFieldId(sFld.getId());
-						in.insertSurveyAnswer(sa);
-					} else {
-						/*
-						 * TODO
-						 * Some fields cannot be mapped
-						 * Handle the error!!
-						 * 
-						 */
+					if (sField != null) {
+						String field = sField.getName();
+						String value = sField.getValue();
+						Questionsfields sFld = in.getFormFieldByNameAndQuestion(questionId, field);
+						if (sFld != null) {
+							Surveyanswers sa = new Surveyanswers();
+							sa.setSurveyId(surveyId.intValue());
+							sa.setField(field);
+							sa.setValue(value);
+							sa.setFieldId(sFld.getId());
+							in.insertSurveyAnswer(sa);
+						} else {
+							/*
+							 * TODO
+							 * Some fields cannot be mapped
+							 * Handle the error!!
+							 * 
+							 */
+						}
 					}
 				}
 			}
