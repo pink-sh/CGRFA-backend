@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
@@ -90,6 +91,7 @@ public class CGRFA {
 		questionnaire.setQuestions(w.buildQuestionList(id));
 		questionnaire.setQuestionType(w.getQuestionTypes());
 		questionnaire.setHeaders(w.getQuestionnaireHeaders(id));
+		questionnaire.setInsertedCountriesIDs(new ArrayList<String>());
 		
 		ObjectMapper mapper = new ObjectMapper();
 		try {
@@ -111,6 +113,7 @@ public class CGRFA {
 		questionnaire.setQuestions(w.buildQuestionList());
 		questionnaire.setQuestionType(w.getQuestionTypes());
 		questionnaire.setHeaders(w.getQuestionnaireHeaders());
+		questionnaire.setInsertedCountriesIDs(w.getListOfInsertedCountriesIDs());
 		
 		ObjectMapper mapper = new ObjectMapper();
 		try {

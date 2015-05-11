@@ -11,4 +11,5 @@ public @Data class Questionnaire {
 	List<Question> questions;
 	HashMap<Integer, List<ControlledEntry>> controlledLists;
 	List<QuestionType> questionType;
+	List<String> InsertedCountriesIDs;
 }

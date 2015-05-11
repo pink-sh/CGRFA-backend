@@ -1270,6 +1270,15 @@ public class Worker {
 		return result;
 	}
 	
+	public List<String> getListOfInsertedCountriesIDs() {
+		List<String> returnList = new ArrayList<String>();
+		List<Survey> insertedSurvey = in.getAllSurvey();
+		for (Survey survey : insertedSurvey) {
+			returnList.add(in.getCountryById(survey.getCountry()).getIso3());
+		}
+		return returnList;
+	}
+	
 	public String getStatusReport() throws IOException, COSVisitorException {
 		File temp = File.createTempFile("cgrfa_report", ".pdf");
 		ClassLoader classLoader = getClass().getClassLoader();
