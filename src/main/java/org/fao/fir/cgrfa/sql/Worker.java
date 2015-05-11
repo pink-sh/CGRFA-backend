@@ -67,7 +67,8 @@ import org.fao.fir.cgrfa.objects.json.Headers;
 import org.fao.fir.cgrfa.objects.json.Status;
 import org.fao.fir.cgrfa.objects.json.SurveyList;
 import org.fao.fir.cgrfa.pdf.XFA_Parser;
-import org.fao.fir.cgrfa.pdf.parser.objects.Subform;
+import org.fao.fir.cgrfa.pdf.parser.objects.PDFField;
+import org.fao.fir.cgrfa.pdf.parser.objects.PDFSubform;
 
 public class Worker {
 	
@@ -628,7 +629,7 @@ public class Worker {
 			}
 			
 			if (answer.getMultipleQuestion() != null) {
-				for (org.fao.fir.cgrfa.pdf.parser.objects.Field sField : answer.getMultipleQuestion()) {
+				for (PDFField sField : answer.getMultipleQuestion()) {
 					String field = sField.getName();
 					String value = sField.getValue();
 					Questionsfields sFld = in.getFormFieldByNameAndQuestion(questionId, field);
@@ -678,7 +679,7 @@ public class Worker {
 					} else {
 						multi = 0;
 					}
-					for (org.fao.fir.cgrfa.pdf.parser.objects.Field sField : row.getRows()) {
+					for (PDFField sField : row.getRows()) {
 						String field = sField.getName();
 						String value = sField.getValue();
 						Questionstablesfields sFld = null;
@@ -1329,9 +1330,9 @@ public class Worker {
 			
 			LinkedList<PDFQuestion> list = new LinkedList<PDFQuestion>();
 			
-			org.fao.fir.cgrfa.pdf.parser.objects.Field country = parser.getFieldByXPath("/Page3/txt_country");
-			org.fao.fir.cgrfa.pdf.parser.objects.Field date = parser.getFieldByXPath("/Page3/txt_date");
-			org.fao.fir.cgrfa.pdf.parser.objects.Field preparedBy = parser.getFieldByXPath("/Page3/txt_preparedBy");
+			PDFField country = parser.getFieldByXPath("/Page3/txt_country");
+			PDFField date = parser.getFieldByXPath("/Page3/txt_date");
+			PDFField preparedBy = parser.getFieldByXPath("/Page3/txt_preparedBy");
 			PDFQuestionnaire.setCountry(country.getValue());
 			PDFQuestionnaire.setDate(date.getValue());
 			PDFQuestionnaire.setPreparedBy(preparedBy.getValue());
@@ -1345,26 +1346,26 @@ public class Worker {
 			list.add(new PDFQuestion(parser.getFieldByXPath("/Page6/q2_subform/q2_radioList"), null, null, dbQuestions.get(3).getId()));
 			
 			//QUESTION 3
-			List<org.fao.fir.cgrfa.pdf.parser.objects.Field> Question3 = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+			List<PDFField> Question3 = new ArrayList<PDFField>();
 			Question3.add(parser.getFieldByXPath("/Page6/q3_subform/q3_radioList"));
 			Question3.add(parser.getFieldByXPath("/Page6/q3_txtinfo"));
 			list.add(new PDFQuestion(null, Question3, null, dbQuestions.get(4).getId()));
 			
 			//QUESTION 4
-			List<org.fao.fir.cgrfa.pdf.parser.objects.Field> Question4 = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+			List<PDFField> Question4 = new ArrayList<PDFField>();
 			Question4.add(parser.getFieldByXPath("/Page6/q4_subform/q4a_radioList"));
 			Question4.add(parser.getFieldByXPath("/Page6/q4_subform/q4b_radioList"));
 			Question4.add(parser.getFieldByXPath("/Page6/q4_subform/q4_txtinfo"));
 			list.add(new PDFQuestion(null, Question4, null, dbQuestions.get(5).getId()));
 			
 			//QUESTION 5
-			List<org.fao.fir.cgrfa.pdf.parser.objects.Field> Question5 = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+			List<PDFField> Question5 = new ArrayList<PDFField>();
 			Question5.add(parser.getFieldByXPath("/Page7/q5_sf/q5_radioList"));
 			Question5.add(parser.getFieldByXPath("/Page7/q5_sf/q5_txtinfo"));
 			list.add(new PDFQuestion(null, Question5, null, dbQuestions.get(6).getId()));
 			
 			//QUESTION 6
-			List<org.fao.fir.cgrfa.pdf.parser.objects.Field> Question6 = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+			List<PDFField> Question6 = new ArrayList<PDFField>();
 			Question6.add(parser.getFieldByXPath("/Page7/q6_sf/q6_txtperc1"));
 			Question6.add(parser.getFieldByXPath("/Page7/q6_sf/q6_txtperc2"));
 			Question6.add(parser.getFieldByXPath("/Page7/q6_sf/q6_txtperc3"));
@@ -1378,7 +1379,7 @@ public class Worker {
 			LinkedList<PDFTableRow> Question8 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page8/q8Table/Item"); i++) {
 				
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page8/q8Table/Item[" + Integer.toString(i) + "]/q8_01/SpeciesAutosuggestionSubform/ListBoxSubform/q8_species"));
 				item.add(Worker.getFieldFromParser(parser, "/Page8/q8Table/Item[" + Integer.toString(i) + "]/q8TableAnswers/Row1/q8_chk1"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page8/q8Table/Item[" + Integer.toString(i) + "]/q8TableAnswers/Row1/q8_sf1"), "q8_sf1"));
@@ -1397,7 +1398,7 @@ public class Worker {
 			//QUESTION 9
 			LinkedList<PDFTableRow> Question9 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page9/q9Table/Item"); i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page9/q9Table/Item[" + Integer.toString(i) + "]/q9TableFarmedSpecies/Row1/q9_native_introduced/q9_radio_native_introduced"));
 				item.add(Worker.getFieldFromParser(parser, "/Page9/q9Table/Item[" + Integer.toString(i) + "]/q9TableFarmedSpecies/Row2/SpeciesAutosuggestionSubform/ListBoxSubform/q9_species"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page9/q9Table/Item[" + Integer.toString(i) + "]/q9_chk2"), "q9_chk2"));
@@ -1414,7 +1415,7 @@ public class Worker {
 			//QUESTION 10
 			LinkedList<PDFTableRow> Question10 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page11/q10Table/Item"); i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page11/q10Table/Item[" + Integer.toString(i) + "]/q10_01/SpeciesAutosuggestionSubform/ListBoxSubform/q10_species"));
 				item.add(Worker.getFieldFromParser(parser, "/Page11/q10Table/Item[" + Integer.toString(i) + "]/q10_02/q10_radio2"));
 				item.add(Worker.getFieldFromParser(parser, "/Page11/q10Table/Item[" + Integer.toString(i) + "]/q10_comments"));
@@ -1425,7 +1426,7 @@ public class Worker {
 			//QUESTION 11
 			LinkedList<PDFTableRow> Question11 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page12/q11Table/Item"); i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page12/q11Table/Item[" + Integer.toString(i) + "]/q11_01/SpeciesAutosuggestionSubform/ListBoxSubform/q11_species"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page12/q11Table/Item[" + Integer.toString(i) + "]/q11_02"), "q11_02"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page12/q11Table/Item[" + Integer.toString(i) + "]/q11_03"), "q11_03"));
@@ -1439,7 +1440,7 @@ public class Worker {
 			//QUESTION 12
 			LinkedList<PDFTableRow> Question12 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page13/q12Table/Item"); i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page13/q12Table/Item[" + Integer.toString(i) + "]/q12_01/SpeciesAutosuggestionSubform/ListBoxSubform/q12_species"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page13/q12Table/Item[" + Integer.toString(i) + "]/q12_02"), "q12_02"));
 				item.add(Worker.getFieldFromParser(parser, "/Page13/q12Table/Item[" + Integer.toString(i) + "]/q12_comments"));
@@ -1450,7 +1451,7 @@ public class Worker {
 			//QUESTION 13
 			LinkedList<PDFTableRow> Question13 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page14/q13Table/Item"); i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page14/q13Table/Item[" + Integer.toString(i) + "]/q13_01/SpeciesAutosuggestionSubform/ListBoxSubform/q13_species"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page14/q13Table/Item[" + Integer.toString(i) + "]/q13_02"), "q13_02"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page14/q13Table/Item[" + Integer.toString(i) + "]/q13_03"), "q13_03"));
@@ -1463,7 +1464,7 @@ public class Worker {
 			//QUESTION 14
 			LinkedList<PDFTableRow> Question14 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page15/q14Table/Item"); i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page15/q14Table/Item[" + Integer.toString(i) + "]/q14_01/SpeciesAutosuggestionSubform/ListBoxSubform/q14_species"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page15/q14Table/Item[" + Integer.toString(i) + "]/q14_02"), "q14_02"));
 				item.add(Worker.getFieldFromParser(parser, "/Page15/q14Table/Item[" + Integer.toString(i) + "]/q14_03/q14_radio3"));
@@ -1483,13 +1484,13 @@ public class Worker {
 			//QUESTION 15
 			LinkedList<PDFTableRow> Question15 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= 6; i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page17/q15Table/Row" + Integer.toString(i) + "/q15_02/q15_02_radio"));
 				item.add(Worker.getFieldFromParser(parser, "/Page17/q15Table/Row" + Integer.toString(i) + "/q15_comment"));
 				Question15.add(new PDFTableRow(item, "Row" + Integer.toString(i)));
 			}
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page17/q15Table/Item"); i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page17/q15Table/Item[" + Integer.toString(i) + "]/tbl_q15_other/Row3/txt_q15_other"));
 				item.add(Worker.getFieldFromParser(parser, "/Page17/q15Table/Item[" + Integer.toString(i) + "]/q15_02/q15_02_radio"));
 				item.add(Worker.getFieldFromParser(parser, "/Page17/q15Table/Item[" + Integer.toString(i) + "]/q15_comment"));
@@ -1500,13 +1501,13 @@ public class Worker {
 			//QUESTION 16
 			LinkedList<PDFTableRow> Question16 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= 6; i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page18/q16Table/Row" + Integer.toString(i) + "/q16_02/q16_02_radio"));
 				item.add(Worker.getFieldFromParser(parser, "/Page18/q16Table/Row" + Integer.toString(i) + "/q16_comment"));
 				Question16.add(new PDFTableRow(item, "Row" + Integer.toString(i)));
 			}
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page18/q16Table/Item"); i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page18/q16Table/Item[" + Integer.toString(i) + "]/tbl_q16_other/Row3/txt_q16_other"));
 				item.add(Worker.getFieldFromParser(parser, "/Page18/q16Table/Item[" + Integer.toString(i) + "]/q16_02/q16_02_radio"));
 				item.add(Worker.getFieldFromParser(parser, "/Page18/q16Table/Item[" + Integer.toString(i) + "]/q16_comment"));
@@ -1520,13 +1521,13 @@ public class Worker {
 			//QUESTION 18
 			LinkedList<PDFTableRow> Question18 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= 6; i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page20/q18Table/Row" + Integer.toString(i) + "/q18_sf1/q18_radio1"));
 				item.add(Worker.getFieldFromParser(parser, "/Page20/q18Table/Row" + Integer.toString(i) + "/q18_comments"));
 				Question18.add(new PDFTableRow(item, "Row" + Integer.toString(i)));
 			}
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page20/q18Table/Item"); i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page20/q18Table/Item[" + Integer.toString(i) + "]/Table13/Row3/q18_01_other"));
 				item.add(Worker.getFieldFromParser(parser, "/Page20/q18Table/Item[" + Integer.toString(i) + "]/q18_sfOther/q18_radioOther"));
 				item.add(Worker.getFieldFromParser(parser, "/Page20/q18Table/Item[" + Integer.toString(i) + "]/q18_commentsOther"));
@@ -1537,13 +1538,13 @@ public class Worker {
 			//QUESTION 19
 			LinkedList<PDFTableRow> Question19 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= 7; i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page21/q19Table/Row" + Integer.toString(i) + "/q19_02/q19_02_radio"));
 				item.add(Worker.getFieldFromParser(parser, "/Page21/q19Table/Row" + Integer.toString(i) + "/q19_comment"));
 				Question19.add(new PDFTableRow(item, "Row" + Integer.toString(i)));
 			}
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page21/q19Table/Item"); i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page21/q19Table/Item[" + Integer.toString(i) + "]/tbl_q19_other/Row3/txt_q19_other"));
 				item.add(Worker.getFieldFromParser(parser, "/Page21/q19Table/Item[" + Integer.toString(i) + "]/q19_02/q19_02_radio"));
 				item.add(Worker.getFieldFromParser(parser, "/Page21/q19Table/Item[" + Integer.toString(i) + "]/q19_comment"));
@@ -1552,13 +1553,13 @@ public class Worker {
 			list.add(new PDFQuestion(null, null, new PDFTable(Question19, "q19Table"), dbQuestions.get(20).getId()));
 			
 			//QUESTION 20
-			List<org.fao.fir.cgrfa.pdf.parser.objects.Field> Question20 = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+			List<PDFField> Question20 = new ArrayList<PDFField>();
 			Question20.add(parser.getFieldByXPath("/Page22/q20_sfHeader/q20_radio"));
 			Question20.add(parser.getFieldByXPath("/Page22/q20_sfHeader/q20_additionalInformation"));
 			list.add(new PDFQuestion(null, Question20, null, dbQuestions.get(21).getId()));
 			
 			//QUESTION 21
-			List<org.fao.fir.cgrfa.pdf.parser.objects.Field> Question21 = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+			List<PDFField> Question21 = new ArrayList<PDFField>();
 			Question21.add(parser.getFieldByXPath("/Page24/q21_radio"));
 			Question21.add(parser.getFieldByXPath("/Page24/q21_additionalInformation"));
 			list.add(new PDFQuestion(null, Question21, null, dbQuestions.get(22).getId()));
@@ -1569,12 +1570,12 @@ public class Worker {
 			//QUESTION 23
 			LinkedList<PDFTableRow> Question23 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= 5; i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page25/q23Table/Row" + Integer.toString(i) + "/q23_sf_0" + Integer.toString(i) + "/q23_rank"));
 				Question23.add(new PDFTableRow(item, "Row" + Integer.toString(i)));
 			}
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page25/q23Table/Item"); i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page25/q23Table/Item[" + Integer.toString(i) + "]/Table15/Row2/q23_name_other"));
 				item.add(Worker.getFieldFromParser(parser, "/Page25/q23Table/Item[" + Integer.toString(i) + "]/q23_sf_other/q23_rank_other"));
 				Question23.add(new PDFTableRow(item, "Item"));
@@ -1582,19 +1583,19 @@ public class Worker {
 			list.add(new PDFQuestion(null, null, new PDFTable(Question23, "q23Table"), dbQuestions.get(24).getId()));
 			
 			//QUESTION 24
-			List<org.fao.fir.cgrfa.pdf.parser.objects.Field> Question24 = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+			List<PDFField> Question24 = new ArrayList<PDFField>();
 			Question24.add(parser.getFieldByXPath("/Page26/q24_radio"));
 			Question24.add(parser.getFieldByXPath("/Page26/q24_examples"));
 			list.add(new PDFQuestion(null, Question24, null, dbQuestions.get(25).getId()));
 			
 			//QUESTION 25
-			List<org.fao.fir.cgrfa.pdf.parser.objects.Field> Question25 = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+			List<PDFField> Question25 = new ArrayList<PDFField>();
 			Question25.add(parser.getFieldByXPath("/Page26/q25_radio"));
 			Question25.add(parser.getFieldByXPath("/Page26/q25_examples"));
 			list.add(new PDFQuestion(null, Question25, null, dbQuestions.get(26).getId()));
 			
 			//QUESTION 26
-			List<org.fao.fir.cgrfa.pdf.parser.objects.Field> Question26 = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+			List<PDFField> Question26 = new ArrayList<PDFField>();
 			Question26.add(parser.getFieldByXPath("/Page27/q26_sf/q26_radio"));
 			Question26.add(parser.getFieldByXPath("/Page27/q26_sf/q26_examples"));
 			list.add(new PDFQuestion(null, Question26, null, dbQuestions.get(27).getId()));
@@ -1602,7 +1603,7 @@ public class Worker {
 			//QUESTION 27
 			LinkedList<PDFTableRow> Question27 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page27/q27Table/Item"); i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page27/q27Table/Item[" + Integer.toString(i) + "]/SpeciesAutosuggestionSubform/ListBoxSubform/q27_species"));
 				item.add(Worker.getFieldFromParser(parser, "/Page27/q27Table/Item[" + Integer.toString(i) + "]/q27_sf/q27_radio02"));
 				item.add(Worker.getFieldFromParser(parser, "/Page27/q27Table/Item[" + Integer.toString(i) + "]/q27_comments"));
@@ -1613,7 +1614,7 @@ public class Worker {
 			//QUESTION 28
 			LinkedList<PDFTableRow> Question28 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page28/q28Table/Item"); i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page28/q28Table/Item[" + Integer.toString(i) + "]/q28_txtSpecies"));
 				item.add(Worker.getFieldFromParser(parser, "/Page28/q28Table/Item[" + Integer.toString(i) + "]/q28_sf/q28_radio02"));
 				item.add(Worker.getFieldFromParser(parser, "/Page28/q28Table/Item[" + Integer.toString(i) + "]/q28_comments"));
@@ -1624,7 +1625,7 @@ public class Worker {
 			//QUESTION 29
 			LinkedList<PDFTableRow> Question29 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page29/q29Table/Item"); i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page29/q29Table/Item[" + Integer.toString(i) + "]/q29_txt_species"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page29/q29Table/Item[" + Integer.toString(i) + "]/q29_sf_02"), "q29_sf_02"));
 				item.add(Worker.getFieldFromParser(parser, "/Page29/q29Table/Item[" + Integer.toString(i) + "]/q29_sf_03/q29_radio_03"));
@@ -1636,7 +1637,7 @@ public class Worker {
 			//QUESTION 30
 			LinkedList<PDFTableRow> Question30 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page30/q30Table/Item"); i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page30/q30Table/Item[" + Integer.toString(i) + "]/q30_txt_species"));
 				item.add(Worker.getFieldFromParser(parser, "/Page30/q30Table/Item[" + Integer.toString(i) + "]/q30_txt_users"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page30/q30Table/Item[" + Integer.toString(i) + "]/q30_sf_03"), "q30_sf_03"));
@@ -1649,12 +1650,12 @@ public class Worker {
 			//QUESTION 31
 			LinkedList<PDFTableRow> Question31 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= 5; i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page31/q31Table/Row" + Integer.toString(i) + "/q31_sf_0" + Integer.toString(i) + "/q31_rank"));
 				Question31.add(new PDFTableRow(item, "Row" + Integer.toString(i)));
 			}
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page31/q31Table/Item"); i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page31/q31Table/Item[" + Integer.toString(i) + "]/Table18/Row3/q31_txt_other"));
 				item.add(Worker.getFieldFromParser(parser, "/Page31/q31Table/Item[" + Integer.toString(i) + "]/q31_sf_other/q31_rank"));
 				Question31.add(new PDFTableRow(item, "Item"));
@@ -1664,14 +1665,14 @@ public class Worker {
 			//QUESTION 32
 			LinkedList<PDFTableRow> Question32 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= 12; i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page33/q32Table/Row" + Integer.toString(i) + "/q32_sf_02"), "q32_sf_02"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page33/q32Table/Row" + Integer.toString(i) + "/q32_sf_03"), "q32_sf_03"));
 				item.add(Worker.getFieldFromParser(parser, "/Page33/q32Table/Row" + Integer.toString(i) + "/q32_sf_02/q32_other"));
 				item.add(Worker.getFieldFromParser(parser, "/Page33/q32Table/Row" + Integer.toString(i) + "/q32_txt_comments"));
 				Question32.add(new PDFTableRow(item, "Row" + Integer.toString(i)));
 			}
-			List<org.fao.fir.cgrfa.pdf.parser.objects.Field> Question32More = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+			List<PDFField> Question32More = new ArrayList<PDFField>();
 			Question32More.add(parser.getFieldByXPath("/Page33/q32More/q32_more_a"));
 			Question32More.add(parser.getFieldByXPath("/Page33/q32More/q32_more_b"));
 			list.add(new PDFQuestion(null, Question32More, new PDFTable(Question32, "q32Table"), dbQuestions.get(33).getId()));
@@ -1679,7 +1680,7 @@ public class Worker {
 			//QUESTION 33
 			LinkedList<PDFTableRow> Question33 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page34/q33Table/Item"); i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page34/q33Table/Item[" + Integer.toString(i) + "]/q33_txt_legislation"));
 				item.add(Worker.getFieldFromParser(parser, "/Page34/q33Table/Item[" + Integer.toString(i) + "]/q33_02/q33_date"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page34/q33Table/Item[" + Integer.toString(i) + "]/q33_03"), "q33_03"));
@@ -1694,12 +1695,12 @@ public class Worker {
 			//QUESTION 35
 			LinkedList<PDFTableRow> Question35 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= 3; i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page35/q35Table/Row" + Integer.toString(i) + "/q35_txt_comments"));
 				Question35.add(new PDFTableRow(item, "Row" + Integer.toString(i)));
 			}
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page35/q35Table/Item"); i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page35/q35Table/Item[" + Integer.toString(i) + "]/tblItem/Row3/q35_txt_genetic"));
 				item.add(Worker.getFieldFromParser(parser, "/Page35/q35Table/Item[" + Integer.toString(i) + "]/q35_txt_comments"));
 				Question35.add(new PDFTableRow(item, "Item"));
@@ -1709,7 +1710,7 @@ public class Worker {
 			//QUESTION 36
 			LinkedList<PDFTableRow> Question36 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page36/q36Table/Item"); i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page36/q36Table/Item[" + Integer.toString(i) + "]/q36_txt_action"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page36/q36Table/Item[" + Integer.toString(i) + "]/q36_sf"), "q36_sf"));
 				item.add(Worker.getFieldFromParser(parser, "/Page36/q36Table/Item[" + Integer.toString(i) + "]/q36_txt_comments"));
@@ -1720,13 +1721,13 @@ public class Worker {
 			//QUESTION 37
 			LinkedList<PDFTableRow> Question37 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= 8; i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page37/q37Table/Row" + Integer.toString(i) + "/q37_sf"), "q37_sf"));
 				item.add(Worker.getFieldFromParser(parser, "/Page37/q37Table/Row" + Integer.toString(i) + "/q37_txt_comments"));
 				Question37.add(new PDFTableRow(item, "Row" + Integer.toString(i)));
 			}
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page37/q37Table/Item"); i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page37/q37Table/Item[" + Integer.toString(i) + "]/tblItem/Row3/q37_txt_obstacles"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page37/q37Table/Item[" + Integer.toString(i) + "]/q37_sf"), "q37_sf"));
 				item.add(Worker.getFieldFromParser(parser, "/Page37/q37Table/Item[" + Integer.toString(i) + "]/q37_txt_comments"));
@@ -1735,7 +1736,7 @@ public class Worker {
 			list.add(new PDFQuestion(null, null, new PDFTable(Question37, "q37Table"), dbQuestions.get(38).getId()));
 			
 			//QUESTION 38
-			List<org.fao.fir.cgrfa.pdf.parser.objects.Field> Question38 = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+			List<PDFField> Question38 = new ArrayList<PDFField>();
 			Question38.add(parser.getFieldByXPath("/Page38/q39_sfHeader/q38_radio"));
 			Question38.add(parser.getFieldByXPath("/Page38/q39_sfHeader/q38_txt_details"));
 			list.add(new PDFQuestion(null, Question38, null, dbQuestions.get(39).getId()));
@@ -1743,7 +1744,7 @@ public class Worker {
 			//QUESTION 39
 			LinkedList<PDFTableRow> Question39 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page39/q39Table/Item"); i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page39/q39Table/Item[" + Integer.toString(i) + "]/q39_txt_institution"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page39/q39Table/Item[" + Integer.toString(i) + "]/q39_sf"), "q39_sf"));
 				item.add(Worker.getFieldFromParser(parser, "/Page39/q39Table/Item[" + Integer.toString(i) + "]/q39_comment"));
@@ -1754,12 +1755,12 @@ public class Worker {
 			//QUESTION 40
 			LinkedList<PDFTableRow> Question40 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= 8; i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page40/q40Table/Row" + Integer.toString(i) + "/q40_01/q40_rank"));
 				Question40.add(new PDFTableRow(item, "Row" + Integer.toString(i)));
 			}
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page40/q40Table/Item"); i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page40/q40Table/Item[" + Integer.toString(i) + "]/q40_item_sf/Table25/Row2/q40_other"));
 				item.add(Worker.getFieldFromParser(parser, "/Page40/q40Table/Item[" + Integer.toString(i) + "]/q40_01/q40_rank"));
 				Question40.add(new PDFTableRow(item, "Item"));
@@ -1769,14 +1770,14 @@ public class Worker {
 			//QUESTION 41
 			LinkedList<PDFTableRow> Question41 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= 5; i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page41/q41Table/Row" + Integer.toString(i) + "/q41_txt_institution"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page41/q41Table/Row" + Integer.toString(i) + "/q41_sf_03"), "q41_sf_03"));
 				item.add(Worker.getFieldFromParser(parser, "/Page41/q41Table/Row" + Integer.toString(i) + "/q41_txt_comments"));
 				Question41.add(new PDFTableRow(item, "Row" + Integer.toString(i)));
 			}
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page41/q41Table/Item"); i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page41/q41Table/Item[" + Integer.toString(i) + "]/tblItem/Row3/q41_txt_thematic"));
 				item.add(Worker.getFieldFromParser(parser, "/Page41/q41Table/Item[" + Integer.toString(i) + "]/q41_thematic_area"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page41/q41Table/Item[" + Integer.toString(i) + "]/q41_sf_03"), "q41_sf_03"));
@@ -1788,7 +1789,7 @@ public class Worker {
 			//QUESTION 42
 			LinkedList<PDFTableRow> Question42 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page42/q42Table/Item"); i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page42/q42Table/Item[" + Integer.toString(i) + "]/q42_txt_mechanism"));
 				item.add(Worker.getFieldFromParser(parser, "/Page42/q42Table/Item[" + Integer.toString(i) + "]/q42_txt_description"));
 				Question42.add(new PDFTableRow(item, "Item"));
@@ -1798,12 +1799,12 @@ public class Worker {
 			//QUESTION 43
 			LinkedList<PDFTableRow> Question43 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= 3; i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page43/q43Table/Row" + Integer.toString(i) + "/q43_01/q43_rank"));
 				Question43.add(new PDFTableRow(item, "Row" + Integer.toString(i)));
 			}
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page43/q43Table/Item"); i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page43/q43Table/Item[" + Integer.toString(i) + "]/q43_item_sf/Table25/Row2/q43_other"));
 				item.add(Worker.getFieldFromParser(parser, "/Page43/q43Table/Item[" + Integer.toString(i) + "]/q43_01/q43_rank"));
 				Question43.add(new PDFTableRow(item, "Item"));
@@ -1813,7 +1814,7 @@ public class Worker {
 			//QUESTION 44
 			LinkedList<PDFTableRow> Question44 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page44/q44Table/Item"); i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page44/q44Table/Item[" + Integer.toString(i) + "]/q44_txt_network"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page44/q44Table/Item[" + Integer.toString(i) + "]/q44_sf"), "q44_sf"));
 				item.add(Worker.getFieldFromParser(parser, "/Page44/q44Table/Item[" + Integer.toString(i) + "]/q44_txt_comments"));
@@ -1824,7 +1825,7 @@ public class Worker {
 			//QUESTION 45
 			LinkedList<PDFTableRow> Question45 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page45/q45Table/Item"); i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page45/q45Table/Item[" + Integer.toString(i) + "]/q45_txt_information_system"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page45/q45Table/Item[" + Integer.toString(i) + "]/q45_sf_01"), "q45_sf_01"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page45/q45Table/Item[" + Integer.toString(i) + "]/q45_sf_02"), "q45_sf_02"));
@@ -1834,7 +1835,7 @@ public class Worker {
 			list.add(new PDFQuestion(null, null, new PDFTable(Question45, "q45Table"), dbQuestions.get(46).getId()));
 			
 			//QUESTION 46
-			List<org.fao.fir.cgrfa.pdf.parser.objects.Field> Question46 = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+			List<PDFField> Question46 = new ArrayList<PDFField>();
 			Question46.add(parser.getFieldByXPath("/Page46/q46_sf/q46_txt_answer_1"));
 			Question46.add(parser.getFieldByXPath("/Page46/q46_sf/q46_txt_answer_2"));
 			list.add(new PDFQuestion(null, Question46, null, dbQuestions.get(47).getId()));
@@ -1842,7 +1843,7 @@ public class Worker {
 			//QUESTION 47
 			LinkedList<PDFTableRow> Question47 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page47/q47Table/Item"); i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page47/q47Table/Item[" + Integer.toString(i) + "]/q47_txt_01"));
 				item.add(Worker.getFieldFromParser(parser, "/Page47/q47Table/Item[" + Integer.toString(i) + "]/q47_txt_02"));
 				item.add(Worker.getFieldFromParser(parser, "/Page47/q47Table/Item[" + Integer.toString(i) + "]/q47_sf_03/q47_radio_03"));
@@ -1855,14 +1856,14 @@ public class Worker {
 			//QUESTION 48
 			LinkedList<PDFTableRow> Question48 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= 8; i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page48/q48Table/Row" + Integer.toString(i) + "/q48_02/q48_rank"));
 				item.add(Worker.getFieldFromParser(parser, "/Page48/q48Table/Row" + Integer.toString(i) + "/q48_sf_03/q48_radio03"));
 				item.add(Worker.getFieldFromParser(parser, "/Page48/q48Table/Row" + Integer.toString(i) + "/q48_comments"));
 				Question48.add(new PDFTableRow(item, "Row" + Integer.toString(i)));
 			}
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page48/q48Table/Item"); i++) {
-				List<org.fao.fir.cgrfa.pdf.parser.objects.Field> item = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page48/q48Table/Item[" + Integer.toString(i) + "]/tblItem/Row3/q48_txt_other"));
 				item.add(Worker.getFieldFromParser(parser, "/Page48/q48Table/Item[" + Integer.toString(i) + "]/q48_02/q48_rank"));
 				item.add(Worker.getFieldFromParser(parser, "/Page48/q48Table/Item[" + Integer.toString(i) + "]/q48_sf_03/q48_radio03"));
@@ -1875,7 +1876,7 @@ public class Worker {
 			list.add(new PDFQuestion(parser.getFieldByXPath("/Page49/q49_sf/q49_txt"), null, null, dbQuestions.get(50).getId()));
 			
 			//QUESTION 50
-			List<org.fao.fir.cgrfa.pdf.parser.objects.Field> Question50 = new ArrayList<org.fao.fir.cgrfa.pdf.parser.objects.Field>();
+			List<PDFField> Question50 = new ArrayList<PDFField>();
 			Question50.add(parser.getFieldByXPath("/Page49/q50_sf/q50_radio"));
 			Question50.add(parser.getFieldByXPath("/Page49/q50_sf/q50_txt"));
 			list.add(new PDFQuestion(null, Question50, null, dbQuestions.get(51).getId()));
@@ -1894,15 +1895,15 @@ public class Worker {
 	}
 	
 	
-	private static org.fao.fir.cgrfa.pdf.parser.objects.Field buildCheckBoxList(Subform sf, String name) {
+	private static PDFField buildCheckBoxList(PDFSubform sf, String name) {
 		if (sf == null) {
-			org.fao.fir.cgrfa.pdf.parser.objects.Field r = new org.fao.fir.cgrfa.pdf.parser.objects.Field();
+			PDFField r = new PDFField();
 			r.setName(name);
 			return r;
 		}
 		
 		String chkVals = "";
-		for (org.fao.fir.cgrfa.pdf.parser.objects.Field f : sf.getFields()) {
+		for (PDFField f : sf.getFields()) {
 			if (f.getName().equals("CheckBox") && !f.getValue().equalsIgnoreCase("0")) {
 				chkVals += f.getValue() + ",";
 			} else if (f.getName().equals("CheckBox1") && !f.getValue().equalsIgnoreCase("0")) {
@@ -1910,18 +1911,18 @@ public class Worker {
 			}
 		}
 		chkVals = chkVals.replaceAll("(,)*$", "");
-		org.fao.fir.cgrfa.pdf.parser.objects.Field field = new org.fao.fir.cgrfa.pdf.parser.objects.Field();
+		PDFField field = new PDFField();
 		field.setName(name);
 		field.setValue(chkVals);
 		
 		return field;
 	}
 	
-	private static org.fao.fir.cgrfa.pdf.parser.objects.Field getFieldFromParser(XFA_Parser parser, String xpath) {
-		org.fao.fir.cgrfa.pdf.parser.objects.Field field = parser.getFieldByXPath(xpath);
+	private static PDFField getFieldFromParser(XFA_Parser parser, String xpath) {
+		PDFField field = parser.getFieldByXPath(xpath);
 		if (field == null) {
 			String[] xp = xpath.split("/");
-			org.fao.fir.cgrfa.pdf.parser.objects.Field r = new org.fao.fir.cgrfa.pdf.parser.objects.Field();
+			PDFField r = new PDFField();
 			r.setName(xp[xp.length-1]);
 			return r;
 		} else {
