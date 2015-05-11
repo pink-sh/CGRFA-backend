@@ -21,8 +21,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
-import org.fao.fir.cgrfa.pdf.parser.objects.Field;
-import org.fao.fir.cgrfa.pdf.parser.objects.Subform;
+import org.fao.fir.cgrfa.pdf.parser.objects.PDFField;
+import org.fao.fir.cgrfa.pdf.parser.objects.PDFSubform;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -36,10 +36,10 @@ private FileInputStream file;
 	private Document domDocument;
 	private List<HashMap<String, Integer>> currentSubFormsIndexes = new ArrayList<HashMap<String, Integer>>();
 	
-	private Subform parsedSubForms = new Subform();
+	private PDFSubform parsedSubForms = new PDFSubform();
 	
-	private List<Field> fields = new ArrayList<Field>();
-	private List<Subform> subforms = new ArrayList<Subform>();
+	private List<PDFField> fields = new ArrayList<PDFField>();
+	private List<PDFSubform> subforms = new ArrayList<PDFSubform>();
 		
 	public XFA_Parser(String source) throws FileNotFoundException {
 		file = new FileInputStream(source);
@@ -57,11 +57,11 @@ private FileInputStream file;
 		}
 	}
 	
-	public Subform getTree() {
+	public PDFSubform getTree() {
 		return this.parsedSubForms;
 	}
 	
-	public void printTree(Subform sf) {
+	public void printTree(PDFSubform sf) {
 		this.printTree(sf, 0);
 	}
 	
@@ -69,9 +69,9 @@ private FileInputStream file;
 		this.printTree(this.parsedSubForms, 0);
 	}
 	
-	public List<Field> getFieldById(String id) {		
+	public List<PDFField> getFieldById(String id) {		
 		if (this.parsedSubForms.getFields() != null && this.parsedSubForms.getFields().size() > 0) {
-			for (Field f : this.parsedSubForms.getFields()) {
+			for (PDFField f : this.parsedSubForms.getFields()) {
 				if (f.getName().equals(id)) {
 					this.fields.add(f);
 				}
@@ -81,7 +81,7 @@ private FileInputStream file;
 		return this.fields;
 	}
 	
-	public List<Subform> getSubFormById(String id) {
+	public List<PDFSubform> getSubFormById(String id) {
 		if (this.parsedSubForms.getName().equals(id)) {
 			this.subforms.add(this.parsedSubForms);
 		}
@@ -91,7 +91,7 @@ private FileInputStream file;
 		return this.subforms;
 	}
 	
-	public Field getFieldByXPath(String path) {
+	public PDFField getFieldByXPath(String path) {
 		List<Map<String, Integer>> sp = this.builPathMap(path);
 		String[] split = path.split("/");
 		String newPath = "";
@@ -100,7 +100,7 @@ private FileInputStream file;
 		}
 		newPath = newPath.substring(0, newPath.length()-1);
 		
-		Subform sf = this.getSubformByXPath(newPath);
+		PDFSubform sf = this.getSubformByXPath(newPath);
 		
 		if (sf == null) { return null; }
 		
@@ -112,7 +112,7 @@ private FileInputStream file;
 		}
 		
 		Integer counter = 0;
-		for (Field fld : sf.getFields()) {
+		for (PDFField fld : sf.getFields()) {
 			if (fld.getName().equals(name)) {
 				counter = counter + 1;
 				if (counter == index) {
@@ -124,11 +124,11 @@ private FileInputStream file;
 		return null;
 	}
 	
-	public Subform getSubformByXPath(String path) {
+	public PDFSubform getSubformByXPath(String path) {
 		List<Map<String, Integer>> sp = this.builPathMap(path);
 		
-		List<Subform> current = this.parsedSubForms.getSubform();
-		Subform lastSf = new Subform();
+		List<PDFSubform> current = this.parsedSubForms.getSubform();
+		PDFSubform lastSf = new PDFSubform();
 		for (int i = 0; i < sp.size(); i++) {
 			String name = "";
 			Integer index = 1;
@@ -138,7 +138,7 @@ private FileInputStream file;
 			}
 			int counter = 0;
 			boolean found = false;
-			for (Subform cur : current) {
+			for (PDFSubform cur : current) {
 				if (cur.getName().equals(name)) {
 					counter = counter + 1;
 					if (counter == index) {
@@ -168,7 +168,7 @@ private FileInputStream file;
 			}
 			newPath = newPath + name + "[" + Integer.toString(index) + "]" + "/";
 		}
-		Subform sf = this.getSubformByXPath(newPath);
+		PDFSubform sf = this.getSubformByXPath(newPath);
 		if (sf == null) { return 0; }
 		
 		String name = "";
@@ -178,8 +178,8 @@ private FileInputStream file;
 		
 		int counter = 0;
 		if (sf.getFields() != null && sf.getFields().size() > 0) {
-			List<Field> listField = sf.getFields();
-			for (Field f : listField) {
+			List<PDFField> listField = sf.getFields();
+			for (PDFField f : listField) {
 				if (f.getName().equals(name)) {
 					counter = counter + 1;
 				}
@@ -188,9 +188,9 @@ private FileInputStream file;
 		return counter;
 	}
 	
-	private void iterateSubForms(String id, List<Subform> current) {
+	private void iterateSubForms(String id, List<PDFSubform> current) {
 		if (current.size() > 0) {
-			for (Subform sf : current) {
+			for (PDFSubform sf : current) {
 				if (sf.getName() != null) {
 					if (sf.getName().equals(id)) {
 						this.subforms.add(sf);
@@ -203,10 +203,10 @@ private FileInputStream file;
 		}
 	}
 	
-	private void iterateFields(String id, List<Subform> current) {
-		for (Subform sf : current) {
+	private void iterateFields(String id, List<PDFSubform> current) {
+		for (PDFSubform sf : current) {
 			if (sf.getFields() != null && sf.getFields().size() > 0) {
-				for (Field f : sf.getFields()) {
+				for (PDFField f : sf.getFields()) {
 					if (f.getName() != null) {
 						if (f.getName().equals(id)) {
 							this.fields.add(f);
@@ -246,15 +246,15 @@ private FileInputStream file;
 		this.parsedSubForms = this.iterateFields(this.parsedSubForms, this.clone(this.parsedSubForms));
 	}
 	
-	private Subform iterateFields(Subform subForm, Subform original) {
+	private PDFSubform iterateFields(PDFSubform subForm, PDFSubform original) {
 		if (this.currentSubFormsIndexes.size() < 1) {
 			HashMap<String, Integer> hm = new HashMap<String, Integer>();
 			hm.put(original.getName(), original.getIndex());
 			this.currentSubFormsIndexes.add(hm);
 		}
-		original.setSubform(new ArrayList<Subform>());
-		List<Subform> listSf = new ArrayList<Subform>();
-		for (Subform sf : subForm.getSubform()) {
+		original.setSubform(new ArrayList<PDFSubform>());
+		List<PDFSubform> listSf = new ArrayList<PDFSubform>();
+		for (PDFSubform sf : subForm.getSubform()) {
 			HashMap<String, Integer> hm = new HashMap<String, Integer>();
 			hm.put(sf.getName(), sf.getIndex());
 			this.currentSubFormsIndexes.add(hm);
@@ -267,7 +267,7 @@ private FileInputStream file;
 		return original;
 	}
 	
-	private List<Field> getFields(List<HashMap<String, Integer>> bredCrumbs) {
+	private List<PDFField> getFields(List<HashMap<String, Integer>> bredCrumbs) {
 		NodeList rootData = this.domDocument.getElementsByTagName("xfa:data").item(0).getChildNodes();		
 		NodeList itemData = rootData;
 		for (HashMap<String, Integer> bc : bredCrumbs) {
@@ -291,9 +291,9 @@ private FileInputStream file;
 			}
 		}
 		
-		List<Field> fields = new ArrayList<Field>();
+		List<PDFField> fields = new ArrayList<PDFField>();
 		for (int i = 0; i < itemData.getLength(); i++) {
-			Field field = new Field();
+			PDFField field = new PDFField();
 			Node node = itemData.item(i);
 			field.setName(node.getNodeName());
 			if (node.getFirstChild() != null) {
@@ -303,7 +303,7 @@ private FileInputStream file;
 						if (node.getChildNodes().item(x).getNodeName().equalsIgnoreCase("CheckBox")) {
 							value = value + node.getChildNodes().item(x).getFirstChild().getNodeValue().replace(",", "\\,") + ",";
 						} else {
-							Field s = new Field();
+							PDFField s = new PDFField();
 							if (node.getChildNodes().item(x).getFirstChild() != null) {
 								s.setName(node.getChildNodes().item(x).getFirstChild().getNodeName());
 								s.setValue(node.getChildNodes().item(x).getFirstChild().getNodeValue());
@@ -322,7 +322,7 @@ private FileInputStream file;
 						if (node.getChildNodes().item(x).getNodeName().equalsIgnoreCase("value")) {
 							value = value + node.getChildNodes().item(x).getFirstChild().getNodeValue().replace(",", "\\,") + ",";
 						} else {
-							Field s = new Field();
+							PDFField s = new PDFField();
 							s.setName(node.getChildNodes().item(x).getFirstChild().getNodeName());
 							s.setValue(node.getChildNodes().item(x).getFirstChild().getNodeValue());
 							fields.add(s);
@@ -342,14 +342,14 @@ private FileInputStream file;
 		return fields;
 	}
 	
-	private List<Subform> iterateSubForm(NodeList dom, int iterations) {
-		List<Subform> subforms = new ArrayList<Subform>();
+	private List<PDFSubform> iterateSubForm(NodeList dom, int iterations) {
+		List<PDFSubform> subforms = new ArrayList<PDFSubform>();
 		
 		for (int i = 0; i < dom.getLength(); i++) {
 			String nodeName = dom.item(i).getNodeName();
 			
 			if (nodeName.equalsIgnoreCase("subform")) {
-				Subform current = new Subform();
+				PDFSubform current = new PDFSubform();
 				String nodeAttr = this.getNameAttributeFromNode(dom.item(i));
 				current.setName(nodeAttr);
 				current.setSubform(this.iterateSubForm(dom.item(i).getChildNodes(), iterations+1));
@@ -360,7 +360,7 @@ private FileInputStream file;
 		for (int i = 0; i < subforms.size(); i++) {
 			for (int j = 0; j < i; j++) {
 				if (subforms.get(j).getName().equals(subforms.get(i).getName())) {
-					Subform temp = this.clone(subforms.get(i));
+					PDFSubform temp = this.clone(subforms.get(i));
 					temp.setIndex(subforms.get(j).getIndex() + 1);
 					subforms.set(i, temp);
 				}
@@ -411,18 +411,18 @@ private FileInputStream file;
 		return sp;
 	}
 	
-	private void printTree(Subform sf, int row) {
+	private void printTree(PDFSubform sf, int row) {
 		String sep = StringUtils.repeat("-", row);
 		System.out.println(sep + " " + sf.getName());
 		if (sf.getSubform().size() > 0) {
-			for (Subform sf1 : sf.getSubform()) {
+			for (PDFSubform sf1 : sf.getSubform()) {
 				this.printTree(sf1, row + 1);
 			}
 		}
 	}
 	
-	private Subform clone(Subform sf) {
-		return new Subform(sf);
+	private PDFSubform clone(PDFSubform sf) {
+		return new PDFSubform(sf);
 	}
 
 }
