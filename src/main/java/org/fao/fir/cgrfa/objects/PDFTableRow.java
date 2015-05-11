@@ -7,6 +7,6 @@ import lombok.Data;
 
 @AllArgsConstructor
 public @Data class PDFTableRow {
-	List<org.fao.fir.cgrfa.pdf.parser.objects.Field> rows;
+	List<org.fao.fir.cgrfa.pdf.parser.objects.PDFField> rows;
 	String name;
 }

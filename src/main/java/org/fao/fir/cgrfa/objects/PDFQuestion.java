@@ -7,8 +7,8 @@ import lombok.Data;
 
 @AllArgsConstructor
 public @Data class PDFQuestion {
-	org.fao.fir.cgrfa.pdf.parser.objects.Field singleQuestion;
-	List<org.fao.fir.cgrfa.pdf.parser.objects.Field> multipleQuestion;
+	org.fao.fir.cgrfa.pdf.parser.objects.PDFField singleQuestion;
+	List<org.fao.fir.cgrfa.pdf.parser.objects.PDFField> multipleQuestion;
 	PDFTable table;
 	int id;
 }
