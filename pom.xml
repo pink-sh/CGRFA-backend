@@ -90,6 +90,9 @@
               <goals>
                 <goal>generate</goal>
               </goals>
+              <configuration>
+              	<overwrite>true</overwrite>
+              </configuration>
             </execution>
           </executions>
         </plugin>
