@@ -176,11 +176,13 @@
 	</resultMap>
 	<!--   SYSTEM QUERIES - START -->
 	<select id="testMe" parameterType="int" resultMap="BaseResultMap">
-		SELECT * FROM "Questions" where "ID" = #{id}
+		SELECT * FROM "Questions" where "ID" = #{id} AND "deleted" = 0
 	</select>
 	
 	<select id="getAllQuestions" parameterType="int" resultMap="BaseResultMap">
-		SELECT * FROM "Questions" order by "order"
+	<![CDATA[ 
+		SELECT * FROM "Questions" WHERE "deleted" = 0 order by "order"
+	]]>
 	</select>
 	
 	<select id="getQuestionFieldsById" parameterType="int" resultMap="QuestionFields">
@@ -192,7 +194,7 @@
 	</select>
 	
 	<select id="getTableByName" resultMap="TableResultMap">
-		SELECT * from "QuestionsTables" WHERE name = #{name}
+		SELECT * from "QuestionsTables" WHERE name = #{name} AND deleted = 0
 	</select>
 	
 	<select id="getTableColumnsById" parameterType="int" resultMap="TableColumnsResultMap">
@@ -200,7 +202,7 @@
 	</select>
 	
 	<select id="getTableColumnsByName" resultMap="TableColumnsResultMap">
-		SELECT * FROM "QuestionsTablesColumns" where table_id = (SELECT "ID" from "QuestionsTables" WHERE name = #{name}) order by "order"
+		SELECT * FROM "QuestionsTablesColumns" where table_id = (SELECT "ID" from "QuestionsTables" WHERE name = #{name} AND "deleted" = 0) order by "order"
 	</select>
 	
 	<select id="getTableRowsById" parameterType="int" resultMap="TableRowsResultMap">
@@ -208,11 +210,11 @@
 	</select>
 	
 	<select id="getTableRowsByName" resultMap="TableRowsResultMap">
-		SELECT * FROM "QuestionsTablesRows" where "table_ID" = (SELECT "ID" from "QuestionsTables" WHERE name = #{name}) order by "order";
+		SELECT * FROM "QuestionsTablesRows" where "table_ID" = (SELECT "ID" from "QuestionsTables" WHERE name = #{name} AND "deleted" = 0) order by "order";
 	</select>
 	
 	<select id="getTableRowByNameTableName" resultMap="TableRowsResultMap">
-		SELECT * FROM "QuestionsTablesRows" where "table_ID" = (SELECT "ID" from "QuestionsTables" WHERE name = #{table_name}) AND "name" = #{row_name} order by "order";
+		SELECT * FROM "QuestionsTablesRows" where "table_ID" = (SELECT "ID" from "QuestionsTables" WHERE name = #{table_name} AND "deleted" = 0) AND "name" = #{row_name} order by "order";
 	</select> 
 	
 	<select id="getCellFieldsByCoordinates" resultMap="TableCellFields">
@@ -244,7 +246,7 @@
   	</select>
   	
   	<select id="getQuestions" resultMap="QuestionsMap">
-  		SELECT * FROM "Questions" ORDER BY "order"
+  		SELECT * FROM "Questions" WHERE "deleted" = 0 ORDER BY "order"
   	</select>
   	
   	<select id="getFormFieldByNameAndQuestion" resultMap="QuestionFieldsMap">

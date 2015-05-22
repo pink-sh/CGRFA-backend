@@ -22,7 +22,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 public class PDF2XML {
-	private static String INPUT = "/home/enrico/Desktop/Adobe/CGRFM_Questionnaire/CGRFA_dynamic_22April2015_filled.pdf";
+	private static String INPUT = "/home/enrico/Desktop/Adobe/CGRFM_Questionnaire/CGRFA_Questionnaire_22May2015-filled.pdf";
 	public static void main(String[] args) {
 		FileInputStream fileInputStream;
 		try {

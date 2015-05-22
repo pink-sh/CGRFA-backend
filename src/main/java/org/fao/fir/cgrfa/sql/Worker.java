@@ -1654,7 +1654,7 @@ public class Worker {
 			LinkedList<PDFTableRow> Question27 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page27/q27Table/Item"); i++) {
 				List<PDFField> item = new ArrayList<PDFField>();
-				item.add(Worker.getFieldFromParser(parser, "/Page27/q27Table/Item[" + Integer.toString(i) + "]/SpeciesAutosuggestionSubform/ListBoxSubform/q27_species"));
+				item.add(Worker.getFieldFromParser(parser, "/Page27/q27Table/Item[" + Integer.toString(i) + "]/q27_txtSpecies"));
 				item.add(Worker.getFieldFromParser(parser, "/Page27/q27Table/Item[" + Integer.toString(i) + "]/q27_sf/q27_radio02"));
 				item.add(Worker.getFieldFromParser(parser, "/Page27/q27Table/Item[" + Integer.toString(i) + "]/q27_comments"));
 				Question27.add(new PDFTableRow(item, "Item"));
@@ -1665,9 +1665,10 @@ public class Worker {
 			LinkedList<PDFTableRow> Question28 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page28/q28Table/Item"); i++) {
 				List<PDFField> item = new ArrayList<PDFField>();
-				item.add(Worker.getFieldFromParser(parser, "/Page28/q28Table/Item[" + Integer.toString(i) + "]/q28_txtSpecies"));
-				item.add(Worker.getFieldFromParser(parser, "/Page28/q28Table/Item[" + Integer.toString(i) + "]/q28_sf/q28_radio02"));
-				item.add(Worker.getFieldFromParser(parser, "/Page28/q28Table/Item[" + Integer.toString(i) + "]/q28_comments"));
+				item.add(Worker.getFieldFromParser(parser, "/Page28/q28Table/Item[" + Integer.toString(i) + "]/q28_txt_species"));
+				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page28/q28Table/Item[" + Integer.toString(i) + "]/q28_sf_02"), "q28_sf_02"));
+				item.add(Worker.getFieldFromParser(parser, "/Page28/q28Table/Item[" + Integer.toString(i) + "]/q28_sf_03/q28_radio_03"));
+				item.add(Worker.getFieldFromParser(parser, "/Page28/q28Table/Item[" + Integer.toString(i) + "]/q28_txt_comments"));
 				Question28.add(new PDFTableRow(item, "Item"));
 			}
 			list.add(new PDFQuestion(null, null, new PDFTable(Question28, "q28Table"), dbQuestions.get(29).getId()));
@@ -1677,8 +1678,9 @@ public class Worker {
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page29/q29Table/Item"); i++) {
 				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page29/q29Table/Item[" + Integer.toString(i) + "]/q29_txt_species"));
-				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page29/q29Table/Item[" + Integer.toString(i) + "]/q29_sf_02"), "q29_sf_02"));
-				item.add(Worker.getFieldFromParser(parser, "/Page29/q29Table/Item[" + Integer.toString(i) + "]/q29_sf_03/q29_radio_03"));
+				item.add(Worker.getFieldFromParser(parser, "/Page29/q29Table/Item[" + Integer.toString(i) + "]/q29_txt_users"));
+				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page29/q29Table/Item[" + Integer.toString(i) + "]/q29_sf_03"), "q29_sf_03"));
+				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page29/q29Table/Item[" + Integer.toString(i) + "]/q29_sf_04"), "q29_sf_04"));
 				item.add(Worker.getFieldFromParser(parser, "/Page29/q29Table/Item[" + Integer.toString(i) + "]/q29_txt_comments"));
 				Question29.add(new PDFTableRow(item, "Item"));
 			}
@@ -1686,72 +1688,70 @@ public class Worker {
 			
 			//QUESTION 30
 			LinkedList<PDFTableRow> Question30 = new LinkedList<PDFTableRow>();
+			for (int i = 1; i <= 5; i++) {
+				List<PDFField> item = new ArrayList<PDFField>();
+				item.add(Worker.getFieldFromParser(parser, "/Page30/q30Table/Row" + Integer.toString(i) + "/q30_sf_0" + Integer.toString(i) + "/q30_rank"));
+				Question30.add(new PDFTableRow(item, "Row" + Integer.toString(i)));
+			}
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page30/q30Table/Item"); i++) {
 				List<PDFField> item = new ArrayList<PDFField>();
-				item.add(Worker.getFieldFromParser(parser, "/Page30/q30Table/Item[" + Integer.toString(i) + "]/q30_txt_species"));
-				item.add(Worker.getFieldFromParser(parser, "/Page30/q30Table/Item[" + Integer.toString(i) + "]/q30_txt_users"));
-				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page30/q30Table/Item[" + Integer.toString(i) + "]/q30_sf_03"), "q30_sf_03"));
-				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page30/q30Table/Item[" + Integer.toString(i) + "]/q30_sf_04"), "q30_sf_04"));
-				item.add(Worker.getFieldFromParser(parser, "/Page30/q30Table/Item[" + Integer.toString(i) + "]/q30_txt_comments"));
+				item.add(Worker.getFieldFromParser(parser, "/Page30/q30Table/Item[" + Integer.toString(i) + "]/Table18/Row3/q30_txt_other"));
+				item.add(Worker.getFieldFromParser(parser, "/Page30/q30Table/Item[" + Integer.toString(i) + "]/q30_sf_other/q30_rank"));
 				Question30.add(new PDFTableRow(item, "Item"));
 			}
 			list.add(new PDFQuestion(null, null, new PDFTable(Question30, "q30Table"), dbQuestions.get(31).getId()));
 			
 			//QUESTION 31
 			LinkedList<PDFTableRow> Question31 = new LinkedList<PDFTableRow>();
-			for (int i = 1; i <= 5; i++) {
+			for (int i = 1; i <= 12; i++) {
 				List<PDFField> item = new ArrayList<PDFField>();
-				item.add(Worker.getFieldFromParser(parser, "/Page31/q31Table/Row" + Integer.toString(i) + "/q31_sf_0" + Integer.toString(i) + "/q31_rank"));
+				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page32/q31Table/Row" + Integer.toString(i) + "/q31_sf_02"), "q31_sf_02"));
+				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page32/q31Table/Row" + Integer.toString(i) + "/q31_sf_03"), "q31_sf_03"));
+				item.add(Worker.getFieldFromParser(parser, "/Page32/q31Table/Row" + Integer.toString(i) + "/q31_sf_02/q31_other"));
+				item.add(Worker.getFieldFromParser(parser, "/Page32/q31Table/Row" + Integer.toString(i) + "/q31_txt_comments"));
 				Question31.add(new PDFTableRow(item, "Row" + Integer.toString(i)));
 			}
-			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page31/q31Table/Item"); i++) {
-				List<PDFField> item = new ArrayList<PDFField>();
-				item.add(Worker.getFieldFromParser(parser, "/Page31/q31Table/Item[" + Integer.toString(i) + "]/Table18/Row3/q31_txt_other"));
-				item.add(Worker.getFieldFromParser(parser, "/Page31/q31Table/Item[" + Integer.toString(i) + "]/q31_sf_other/q31_rank"));
-				Question31.add(new PDFTableRow(item, "Item"));
-			}
-			list.add(new PDFQuestion(null, null, new PDFTable(Question31, "q31Table"), dbQuestions.get(32).getId()));
+			List<PDFField> Question31More = new ArrayList<PDFField>();
+			Question31More.add(parser.getFieldByXPath("/Page32/q31More/q31_more_a"));
+			Question31More.add(parser.getFieldByXPath("/Page32/q31More/q31_more_b"));
+			list.add(new PDFQuestion(null, Question31More, new PDFTable(Question31, "q31Table"), dbQuestions.get(32).getId()));
 			
 			//QUESTION 32
 			LinkedList<PDFTableRow> Question32 = new LinkedList<PDFTableRow>();
-			for (int i = 1; i <= 12; i++) {
+			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page33/q32Table/Item"); i++) {
 				List<PDFField> item = new ArrayList<PDFField>();
-				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page33/q32Table/Row" + Integer.toString(i) + "/q32_sf_02"), "q32_sf_02"));
-				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page33/q32Table/Row" + Integer.toString(i) + "/q32_sf_03"), "q32_sf_03"));
-				item.add(Worker.getFieldFromParser(parser, "/Page33/q32Table/Row" + Integer.toString(i) + "/q32_sf_02/q32_other"));
-				item.add(Worker.getFieldFromParser(parser, "/Page33/q32Table/Row" + Integer.toString(i) + "/q32_txt_comments"));
-				Question32.add(new PDFTableRow(item, "Row" + Integer.toString(i)));
+				item.add(Worker.getFieldFromParser(parser, "/Page33/q32Table/Item[" + Integer.toString(i) + "]/q32_txt_legislation"));
+				item.add(Worker.getFieldFromParser(parser, "/Page33/q32Table/Item[" + Integer.toString(i) + "]/q32_02/q32_date"));
+				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page33/q32Table/Item[" + Integer.toString(i) + "]/q32_03"), "q32_03"));
+				item.add(Worker.getFieldFromParser(parser, "/Page33/q32Table/Item[" + Integer.toString(i) + "]/q32_comments"));
+				Question32.add(new PDFTableRow(item, "Item"));
 			}
-			List<PDFField> Question32More = new ArrayList<PDFField>();
-			Question32More.add(parser.getFieldByXPath("/Page33/q32More/q32_more_a"));
-			Question32More.add(parser.getFieldByXPath("/Page33/q32More/q32_more_b"));
-			list.add(new PDFQuestion(null, Question32More, new PDFTable(Question32, "q32Table"), dbQuestions.get(33).getId()));
+			list.add(new PDFQuestion(null, null, new PDFTable(Question32, "q32Table"), dbQuestions.get(33).getId()));
 			
 			//QUESTION 33
-			LinkedList<PDFTableRow> Question33 = new LinkedList<PDFTableRow>();
-			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page34/q33Table/Item"); i++) {
-				List<PDFField> item = new ArrayList<PDFField>();
-				item.add(Worker.getFieldFromParser(parser, "/Page34/q33Table/Item[" + Integer.toString(i) + "]/q33_txt_legislation"));
-				item.add(Worker.getFieldFromParser(parser, "/Page34/q33Table/Item[" + Integer.toString(i) + "]/q33_02/q33_date"));
-				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page34/q33Table/Item[" + Integer.toString(i) + "]/q33_03"), "q33_03"));
-				item.add(Worker.getFieldFromParser(parser, "/Page34/q33Table/Item[" + Integer.toString(i) + "]/q33_comments"));
-				Question33.add(new PDFTableRow(item, "Item"));
-			}
-			list.add(new PDFQuestion(null, null, new PDFTable(Question33, "q33Table"), dbQuestions.get(34).getId()));
+			list.add(new PDFQuestion(parser.getFieldByXPath("/Page34/q33_sfHeader/q33_txtinfo"), null, null, dbQuestions.get(34).getId()));
 			
 			//QUESTION 34
-			list.add(new PDFQuestion(parser.getFieldByXPath("/Page35/q34_sfHeader/q34_txtinfo"), null, null, dbQuestions.get(35).getId()));
+			LinkedList<PDFTableRow> Question34 = new LinkedList<PDFTableRow>();
+			for (int i = 1; i <= 3; i++) {
+				List<PDFField> item = new ArrayList<PDFField>();
+				item.add(Worker.getFieldFromParser(parser, "/Page34/q34Table/Row" + Integer.toString(i) + "/q34_txt_comments"));
+				Question34.add(new PDFTableRow(item, "Row" + Integer.toString(i)));
+			}
+			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page34/q34Table/Item"); i++) {
+				List<PDFField> item = new ArrayList<PDFField>();
+				item.add(Worker.getFieldFromParser(parser, "/Page34/q34Table/Item[" + Integer.toString(i) + "]/tblItem/Row3/q34_txt_genetic"));
+				item.add(Worker.getFieldFromParser(parser, "/Page34/q34Table/Item[" + Integer.toString(i) + "]/q34_txt_comments"));
+				Question34.add(new PDFTableRow(item, "Item"));
+			}
+			list.add(new PDFQuestion(null, null, new PDFTable(Question34, "q34Table"), dbQuestions.get(35).getId()));
 			
 			//QUESTION 35
 			LinkedList<PDFTableRow> Question35 = new LinkedList<PDFTableRow>();
-			for (int i = 1; i <= 3; i++) {
-				List<PDFField> item = new ArrayList<PDFField>();
-				item.add(Worker.getFieldFromParser(parser, "/Page35/q35Table/Row" + Integer.toString(i) + "/q35_txt_comments"));
-				Question35.add(new PDFTableRow(item, "Row" + Integer.toString(i)));
-			}
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page35/q35Table/Item"); i++) {
 				List<PDFField> item = new ArrayList<PDFField>();
-				item.add(Worker.getFieldFromParser(parser, "/Page35/q35Table/Item[" + Integer.toString(i) + "]/tblItem/Row3/q35_txt_genetic"));
+				item.add(Worker.getFieldFromParser(parser, "/Page35/q35Table/Item[" + Integer.toString(i) + "]/q35_txt_action"));
+				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page35/q35Table/Item[" + Integer.toString(i) + "]/q35_sf"), "q35_sf"));
 				item.add(Worker.getFieldFromParser(parser, "/Page35/q35Table/Item[" + Integer.toString(i) + "]/q35_txt_comments"));
 				Question35.add(new PDFTableRow(item, "Item"));
 			}
@@ -1759,9 +1759,15 @@ public class Worker {
 			
 			//QUESTION 36
 			LinkedList<PDFTableRow> Question36 = new LinkedList<PDFTableRow>();
+			for (int i = 1; i <= 8; i++) {
+				List<PDFField> item = new ArrayList<PDFField>();
+				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page36/q36Table/Row" + Integer.toString(i) + "/q36_sf"), "q36_sf"));
+				item.add(Worker.getFieldFromParser(parser, "/Page36/q36Table/Row" + Integer.toString(i) + "/q36_txt_comments"));
+				Question36.add(new PDFTableRow(item, "Row" + Integer.toString(i)));
+			}
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page36/q36Table/Item"); i++) {
 				List<PDFField> item = new ArrayList<PDFField>();
-				item.add(Worker.getFieldFromParser(parser, "/Page36/q36Table/Item[" + Integer.toString(i) + "]/q36_txt_action"));
+				item.add(Worker.getFieldFromParser(parser, "/Page36/q36Table/Item[" + Integer.toString(i) + "]/tblItem/Row3/q36_txt_obstacles"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page36/q36Table/Item[" + Integer.toString(i) + "]/q36_sf"), "q36_sf"));
 				item.add(Worker.getFieldFromParser(parser, "/Page36/q36Table/Item[" + Integer.toString(i) + "]/q36_txt_comments"));
 				Question36.add(new PDFTableRow(item, "Item"));
@@ -1769,170 +1775,153 @@ public class Worker {
 			list.add(new PDFQuestion(null, null, new PDFTable(Question36, "q36Table"), dbQuestions.get(37).getId()));
 			
 			//QUESTION 37
-			LinkedList<PDFTableRow> Question37 = new LinkedList<PDFTableRow>();
-			for (int i = 1; i <= 8; i++) {
-				List<PDFField> item = new ArrayList<PDFField>();
-				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page37/q37Table/Row" + Integer.toString(i) + "/q37_sf"), "q37_sf"));
-				item.add(Worker.getFieldFromParser(parser, "/Page37/q37Table/Row" + Integer.toString(i) + "/q37_txt_comments"));
-				Question37.add(new PDFTableRow(item, "Row" + Integer.toString(i)));
-			}
-			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page37/q37Table/Item"); i++) {
-				List<PDFField> item = new ArrayList<PDFField>();
-				item.add(Worker.getFieldFromParser(parser, "/Page37/q37Table/Item[" + Integer.toString(i) + "]/tblItem/Row3/q37_txt_obstacles"));
-				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page37/q37Table/Item[" + Integer.toString(i) + "]/q37_sf"), "q37_sf"));
-				item.add(Worker.getFieldFromParser(parser, "/Page37/q37Table/Item[" + Integer.toString(i) + "]/q37_txt_comments"));
-				Question37.add(new PDFTableRow(item, "Item"));
-			}
-			list.add(new PDFQuestion(null, null, new PDFTable(Question37, "q37Table"), dbQuestions.get(38).getId()));
+			List<PDFField> Question37 = new ArrayList<PDFField>();
+			Question37.add(parser.getFieldByXPath("/Page37/q37_sfHeader/q37_radio"));
+			Question37.add(parser.getFieldByXPath("/Page37/q37_sfHeader/q37_txt_details"));
+			list.add(new PDFQuestion(null, Question37, null, dbQuestions.get(38).getId()));
 			
 			//QUESTION 38
-			List<PDFField> Question38 = new ArrayList<PDFField>();
-			Question38.add(parser.getFieldByXPath("/Page38/q39_sfHeader/q38_radio"));
-			Question38.add(parser.getFieldByXPath("/Page38/q39_sfHeader/q38_txt_details"));
-			list.add(new PDFQuestion(null, Question38, null, dbQuestions.get(39).getId()));
+			LinkedList<PDFTableRow> Question38 = new LinkedList<PDFTableRow>();
+			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page38/q38Table/Item"); i++) {
+				List<PDFField> item = new ArrayList<PDFField>();
+				item.add(Worker.getFieldFromParser(parser, "/Page38/q38Table/Item[" + Integer.toString(i) + "]/q38_txt_institution"));
+				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page38/q38Table/Item[" + Integer.toString(i) + "]/q38_sf"), "q38_sf"));
+				item.add(Worker.getFieldFromParser(parser, "/Page38/q38Table/Item[" + Integer.toString(i) + "]/q38_comment"));
+				Question38.add(new PDFTableRow(item, "Item"));
+			}
+			list.add(new PDFQuestion(null, null, new PDFTable(Question38, "q38Table"), dbQuestions.get(39).getId()));
 			
 			//QUESTION 39
 			LinkedList<PDFTableRow> Question39 = new LinkedList<PDFTableRow>();
+			for (int i = 1; i <= 8; i++) {
+				List<PDFField> item = new ArrayList<PDFField>();
+				item.add(Worker.getFieldFromParser(parser, "/Page39/q39Table/Row" + Integer.toString(i) + "/q39_01/q39_rank"));
+				Question39.add(new PDFTableRow(item, "Row" + Integer.toString(i)));
+			}
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page39/q39Table/Item"); i++) {
 				List<PDFField> item = new ArrayList<PDFField>();
-				item.add(Worker.getFieldFromParser(parser, "/Page39/q39Table/Item[" + Integer.toString(i) + "]/q39_txt_institution"));
-				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page39/q39Table/Item[" + Integer.toString(i) + "]/q39_sf"), "q39_sf"));
-				item.add(Worker.getFieldFromParser(parser, "/Page39/q39Table/Item[" + Integer.toString(i) + "]/q39_comment"));
+				item.add(Worker.getFieldFromParser(parser, "/Page39/q39Table/Item[" + Integer.toString(i) + "]/q39_item_sf/Table25/Row2/q39_other"));
+				item.add(Worker.getFieldFromParser(parser, "/Page39/q39Table/Item[" + Integer.toString(i) + "]/q39_01/q39_rank"));
 				Question39.add(new PDFTableRow(item, "Item"));
 			}
-			list.add(new PDFQuestion(null, null, new PDFTable(Question39, "q39Table"), dbQuestions.get(40).getId()));
+			list.add(new PDFQuestion(parser.getFieldByXPath("/Page39/q39_comments"), null, new PDFTable(Question39, "q39Table"), dbQuestions.get(40).getId()));
 			
 			//QUESTION 40
 			LinkedList<PDFTableRow> Question40 = new LinkedList<PDFTableRow>();
-			for (int i = 1; i <= 8; i++) {
+			for (int i = 1; i <= 5; i++) {
 				List<PDFField> item = new ArrayList<PDFField>();
-				item.add(Worker.getFieldFromParser(parser, "/Page40/q40Table/Row" + Integer.toString(i) + "/q40_01/q40_rank"));
+				item.add(Worker.getFieldFromParser(parser, "/Page40/q40Table/Row" + Integer.toString(i) + "/q40_txt_institution"));
+				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page40/q40Table/Row" + Integer.toString(i) + "/q40_sf_03"), "q40_sf_03"));
+				item.add(Worker.getFieldFromParser(parser, "/Page40/q40Table/Row" + Integer.toString(i) + "/q40_txt_comments"));
 				Question40.add(new PDFTableRow(item, "Row" + Integer.toString(i)));
 			}
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page40/q40Table/Item"); i++) {
 				List<PDFField> item = new ArrayList<PDFField>();
-				item.add(Worker.getFieldFromParser(parser, "/Page40/q40Table/Item[" + Integer.toString(i) + "]/q40_item_sf/Table25/Row2/q40_other"));
-				item.add(Worker.getFieldFromParser(parser, "/Page40/q40Table/Item[" + Integer.toString(i) + "]/q40_01/q40_rank"));
+				item.add(Worker.getFieldFromParser(parser, "/Page40/q40Table/Item[" + Integer.toString(i) + "]/tblItem/Row3/q40_txt_thematic"));
+				item.add(Worker.getFieldFromParser(parser, "/Page40/q40Table/Item[" + Integer.toString(i) + "]/q40_thematic_area"));
+				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page40/q40Table/Item[" + Integer.toString(i) + "]/q40_sf_03"), "q40_sf_03"));
+				item.add(Worker.getFieldFromParser(parser, "/Page40/q40Table/Item[" + Integer.toString(i) + "]/q40_txt_comments"));
 				Question40.add(new PDFTableRow(item, "Item"));
 			}
-			list.add(new PDFQuestion(parser.getFieldByXPath("/Page40/q40_comments"), null, new PDFTable(Question40, "q40Table"), dbQuestions.get(41).getId()));
+			list.add(new PDFQuestion(null, null, new PDFTable(Question40, "q40Table"), dbQuestions.get(41).getId()));
 			
 			//QUESTION 41
 			LinkedList<PDFTableRow> Question41 = new LinkedList<PDFTableRow>();
-			for (int i = 1; i <= 5; i++) {
-				List<PDFField> item = new ArrayList<PDFField>();
-				item.add(Worker.getFieldFromParser(parser, "/Page41/q41Table/Row" + Integer.toString(i) + "/q41_txt_institution"));
-				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page41/q41Table/Row" + Integer.toString(i) + "/q41_sf_03"), "q41_sf_03"));
-				item.add(Worker.getFieldFromParser(parser, "/Page41/q41Table/Row" + Integer.toString(i) + "/q41_txt_comments"));
-				Question41.add(new PDFTableRow(item, "Row" + Integer.toString(i)));
-			}
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page41/q41Table/Item"); i++) {
 				List<PDFField> item = new ArrayList<PDFField>();
-				item.add(Worker.getFieldFromParser(parser, "/Page41/q41Table/Item[" + Integer.toString(i) + "]/tblItem/Row3/q41_txt_thematic"));
-				item.add(Worker.getFieldFromParser(parser, "/Page41/q41Table/Item[" + Integer.toString(i) + "]/q41_thematic_area"));
-				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page41/q41Table/Item[" + Integer.toString(i) + "]/q41_sf_03"), "q41_sf_03"));
-				item.add(Worker.getFieldFromParser(parser, "/Page41/q41Table/Item[" + Integer.toString(i) + "]/q41_txt_comments"));
+				item.add(Worker.getFieldFromParser(parser, "/Page41/q41Table/Item[" + Integer.toString(i) + "]/q41_txt_mechanism"));
+				item.add(Worker.getFieldFromParser(parser, "/Page41/q41Table/Item[" + Integer.toString(i) + "]/q41_txt_description"));
 				Question41.add(new PDFTableRow(item, "Item"));
 			}
 			list.add(new PDFQuestion(null, null, new PDFTable(Question41, "q41Table"), dbQuestions.get(42).getId()));
 			
 			//QUESTION 42
 			LinkedList<PDFTableRow> Question42 = new LinkedList<PDFTableRow>();
+			for (int i = 1; i <= 3; i++) {
+				List<PDFField> item = new ArrayList<PDFField>();
+				item.add(Worker.getFieldFromParser(parser, "/Page42/q42Table/Row" + Integer.toString(i) + "/q42_01/q42_rank"));
+				Question42.add(new PDFTableRow(item, "Row" + Integer.toString(i)));
+			}
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page42/q42Table/Item"); i++) {
 				List<PDFField> item = new ArrayList<PDFField>();
-				item.add(Worker.getFieldFromParser(parser, "/Page42/q42Table/Item[" + Integer.toString(i) + "]/q42_txt_mechanism"));
-				item.add(Worker.getFieldFromParser(parser, "/Page42/q42Table/Item[" + Integer.toString(i) + "]/q42_txt_description"));
+				item.add(Worker.getFieldFromParser(parser, "/Page42/q42Table/Item[" + Integer.toString(i) + "]/q42_item_sf/Table25/Row2/q42_other"));
+				item.add(Worker.getFieldFromParser(parser, "/Page42/q42Table/Item[" + Integer.toString(i) + "]/q42_01/q42_rank"));
 				Question42.add(new PDFTableRow(item, "Item"));
 			}
-			list.add(new PDFQuestion(null, null, new PDFTable(Question42, "q42Table"), dbQuestions.get(43).getId()));
+			list.add(new PDFQuestion(parser.getFieldByXPath("/Page42/q42_comments"), null, new PDFTable(Question42, "q42Table"), dbQuestions.get(43).getId()));
 			
 			//QUESTION 43
 			LinkedList<PDFTableRow> Question43 = new LinkedList<PDFTableRow>();
-			for (int i = 1; i <= 3; i++) {
-				List<PDFField> item = new ArrayList<PDFField>();
-				item.add(Worker.getFieldFromParser(parser, "/Page43/q43Table/Row" + Integer.toString(i) + "/q43_01/q43_rank"));
-				Question43.add(new PDFTableRow(item, "Row" + Integer.toString(i)));
-			}
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page43/q43Table/Item"); i++) {
 				List<PDFField> item = new ArrayList<PDFField>();
-				item.add(Worker.getFieldFromParser(parser, "/Page43/q43Table/Item[" + Integer.toString(i) + "]/q43_item_sf/Table25/Row2/q43_other"));
-				item.add(Worker.getFieldFromParser(parser, "/Page43/q43Table/Item[" + Integer.toString(i) + "]/q43_01/q43_rank"));
+				item.add(Worker.getFieldFromParser(parser, "/Page43/q43Table/Item[" + Integer.toString(i) + "]/q43_txt_network"));
+				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page43/q43Table/Item[" + Integer.toString(i) + "]/q43_sf"), "q43_sf"));
+				item.add(Worker.getFieldFromParser(parser, "/Page43/q43Table/Item[" + Integer.toString(i) + "]/q43_txt_comments"));
 				Question43.add(new PDFTableRow(item, "Item"));
 			}
-			list.add(new PDFQuestion(parser.getFieldByXPath("/Page43/q43_comments"), null, new PDFTable(Question43, "q43Table"), dbQuestions.get(44).getId()));
+			list.add(new PDFQuestion(null, null, new PDFTable(Question43, "q43Table"), dbQuestions.get(44).getId()));
 			
 			//QUESTION 44
 			LinkedList<PDFTableRow> Question44 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page44/q44Table/Item"); i++) {
 				List<PDFField> item = new ArrayList<PDFField>();
-				item.add(Worker.getFieldFromParser(parser, "/Page44/q44Table/Item[" + Integer.toString(i) + "]/q44_txt_network"));
-				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page44/q44Table/Item[" + Integer.toString(i) + "]/q44_sf"), "q44_sf"));
-				item.add(Worker.getFieldFromParser(parser, "/Page44/q44Table/Item[" + Integer.toString(i) + "]/q44_txt_comments"));
+				item.add(Worker.getFieldFromParser(parser, "/Page44/q44Table/Item[" + Integer.toString(i) + "]/q44_txt_information_system"));
+				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page44/q44Table/Item[" + Integer.toString(i) + "]/q44_sf_01"), "q44_sf_01"));
+				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page44/q44Table/Item[" + Integer.toString(i) + "]/q44_sf_02"), "q44_sf_02"));
+				item.add(Worker.getFieldFromParser(parser, "/Page44/q44Table/Item[" + Integer.toString(i) + "]/q44_sf_02/q44_txt_other_stackholders"));
 				Question44.add(new PDFTableRow(item, "Item"));
 			}
 			list.add(new PDFQuestion(null, null, new PDFTable(Question44, "q44Table"), dbQuestions.get(45).getId()));
 			
 			//QUESTION 45
-			LinkedList<PDFTableRow> Question45 = new LinkedList<PDFTableRow>();
-			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page45/q45Table/Item"); i++) {
-				List<PDFField> item = new ArrayList<PDFField>();
-				item.add(Worker.getFieldFromParser(parser, "/Page45/q45Table/Item[" + Integer.toString(i) + "]/q45_txt_information_system"));
-				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page45/q45Table/Item[" + Integer.toString(i) + "]/q45_sf_01"), "q45_sf_01"));
-				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page45/q45Table/Item[" + Integer.toString(i) + "]/q45_sf_02"), "q45_sf_02"));
-				item.add(Worker.getFieldFromParser(parser, "/Page45/q45Table/Item[" + Integer.toString(i) + "]/q45_sf_02/q45_txt_other_stackholders"));
-				Question45.add(new PDFTableRow(item, "Item"));
-			}
-			list.add(new PDFQuestion(null, null, new PDFTable(Question45, "q45Table"), dbQuestions.get(46).getId()));
+			List<PDFField> Question45 = new ArrayList<PDFField>();
+			Question45.add(parser.getFieldByXPath("/Page45/q45_sf/q45_txt_answer_1"));
+			Question45.add(parser.getFieldByXPath("/Page45/q45_sf/q45_txt_answer_2"));
+			list.add(new PDFQuestion(null, Question45, null, dbQuestions.get(46).getId()));
 			
 			//QUESTION 46
-			List<PDFField> Question46 = new ArrayList<PDFField>();
-			Question46.add(parser.getFieldByXPath("/Page46/q46_sf/q46_txt_answer_1"));
-			Question46.add(parser.getFieldByXPath("/Page46/q46_sf/q46_txt_answer_2"));
-			list.add(new PDFQuestion(null, Question46, null, dbQuestions.get(47).getId()));
+			LinkedList<PDFTableRow> Question46 = new LinkedList<PDFTableRow>();
+			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page46/q46Table/Item"); i++) {
+				List<PDFField> item = new ArrayList<PDFField>();
+				item.add(Worker.getFieldFromParser(parser, "/Page46/q46Table/Item[" + Integer.toString(i) + "]/q46_txt_01"));
+				item.add(Worker.getFieldFromParser(parser, "/Page46/q46Table/Item[" + Integer.toString(i) + "]/q46_txt_02"));
+				item.add(Worker.getFieldFromParser(parser, "/Page46/q46Table/Item[" + Integer.toString(i) + "]/q46_sf_03/q46_radio_03"));
+				item.add(Worker.getFieldFromParser(parser, "/Page46/q46Table/Item[" + Integer.toString(i) + "]/q46_sf_04/q46_radio_04"));
+				item.add(Worker.getFieldFromParser(parser, "/Page46/q46Table/Item[" + Integer.toString(i) + "]/q46_txt_comments"));
+				Question46.add(new PDFTableRow(item, "Item"));
+			}
+			list.add(new PDFQuestion(null, null, new PDFTable(Question46, "q46Table"), dbQuestions.get(47).getId()));
 			
 			//QUESTION 47
 			LinkedList<PDFTableRow> Question47 = new LinkedList<PDFTableRow>();
+			for (int i = 1; i <= 8; i++) {
+				List<PDFField> item = new ArrayList<PDFField>();
+				item.add(Worker.getFieldFromParser(parser, "/Page47/q47Table/Row" + Integer.toString(i) + "/q47_02/q47_rank"));
+				item.add(Worker.getFieldFromParser(parser, "/Page47/q47Table/Row" + Integer.toString(i) + "/q47_sf_03/q47_radio03"));
+				item.add(Worker.getFieldFromParser(parser, "/Page47/q47Table/Row" + Integer.toString(i) + "/q47_comments"));
+				Question47.add(new PDFTableRow(item, "Row" + Integer.toString(i)));
+			}
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page47/q47Table/Item"); i++) {
 				List<PDFField> item = new ArrayList<PDFField>();
-				item.add(Worker.getFieldFromParser(parser, "/Page47/q47Table/Item[" + Integer.toString(i) + "]/q47_txt_01"));
-				item.add(Worker.getFieldFromParser(parser, "/Page47/q47Table/Item[" + Integer.toString(i) + "]/q47_txt_02"));
-				item.add(Worker.getFieldFromParser(parser, "/Page47/q47Table/Item[" + Integer.toString(i) + "]/q47_sf_03/q47_radio_03"));
-				item.add(Worker.getFieldFromParser(parser, "/Page47/q47Table/Item[" + Integer.toString(i) + "]/q47_sf_04/q47_radio_04"));
-				item.add(Worker.getFieldFromParser(parser, "/Page47/q47Table/Item[" + Integer.toString(i) + "]/q47_txt_comments"));
+				item.add(Worker.getFieldFromParser(parser, "/Page47/q47Table/Item[" + Integer.toString(i) + "]/tblItem/Row3/q47_txt_other"));
+				item.add(Worker.getFieldFromParser(parser, "/Page47/q47Table/Item[" + Integer.toString(i) + "]/q47_02/q47_rank"));
+				item.add(Worker.getFieldFromParser(parser, "/Page47/q47Table/Item[" + Integer.toString(i) + "]/q47_sf_03/q47_radio03"));
+				item.add(Worker.getFieldFromParser(parser, "/Page47/q47Table/Item[" + Integer.toString(i) + "]/q47_comments"));
 				Question47.add(new PDFTableRow(item, "Item"));
 			}
 			list.add(new PDFQuestion(null, null, new PDFTable(Question47, "q47Table"), dbQuestions.get(48).getId()));
-			
-			//QUESTION 48
-			LinkedList<PDFTableRow> Question48 = new LinkedList<PDFTableRow>();
-			for (int i = 1; i <= 8; i++) {
-				List<PDFField> item = new ArrayList<PDFField>();
-				item.add(Worker.getFieldFromParser(parser, "/Page48/q48Table/Row" + Integer.toString(i) + "/q48_02/q48_rank"));
-				item.add(Worker.getFieldFromParser(parser, "/Page48/q48Table/Row" + Integer.toString(i) + "/q48_sf_03/q48_radio03"));
-				item.add(Worker.getFieldFromParser(parser, "/Page48/q48Table/Row" + Integer.toString(i) + "/q48_comments"));
-				Question48.add(new PDFTableRow(item, "Row" + Integer.toString(i)));
-			}
-			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page48/q48Table/Item"); i++) {
-				List<PDFField> item = new ArrayList<PDFField>();
-				item.add(Worker.getFieldFromParser(parser, "/Page48/q48Table/Item[" + Integer.toString(i) + "]/tblItem/Row3/q48_txt_other"));
-				item.add(Worker.getFieldFromParser(parser, "/Page48/q48Table/Item[" + Integer.toString(i) + "]/q48_02/q48_rank"));
-				item.add(Worker.getFieldFromParser(parser, "/Page48/q48Table/Item[" + Integer.toString(i) + "]/q48_sf_03/q48_radio03"));
-				item.add(Worker.getFieldFromParser(parser, "/Page48/q48Table/Item[" + Integer.toString(i) + "]/q48_comments"));
-				Question48.add(new PDFTableRow(item, "Item"));
-			}
-			list.add(new PDFQuestion(null, null, new PDFTable(Question48, "q48Table"), dbQuestions.get(49).getId()));
 
+			//QUESTION 48
+			list.add(new PDFQuestion(parser.getFieldByXPath("/Page48/q48_sf/q48_txt"), null, null, dbQuestions.get(49).getId()));
+			
 			//QUESTION 49
-			list.add(new PDFQuestion(parser.getFieldByXPath("/Page49/q49_sf/q49_txt"), null, null, dbQuestions.get(50).getId()));
+			List<PDFField> Question49 = new ArrayList<PDFField>();
+			Question49.add(parser.getFieldByXPath("/Page48/q49_sf/q49_radio"));
+			Question49.add(parser.getFieldByXPath("/Page48/q49_sf/q49_txt"));
+			list.add(new PDFQuestion(null, Question49, null, dbQuestions.get(50).getId()));
 			
 			//QUESTION 50
-			List<PDFField> Question50 = new ArrayList<PDFField>();
-			Question50.add(parser.getFieldByXPath("/Page49/q50_sf/q50_radio"));
-			Question50.add(parser.getFieldByXPath("/Page49/q50_sf/q50_txt"));
-			list.add(new PDFQuestion(null, Question50, null, dbQuestions.get(51).getId()));
-			
-			//QUESTION 51
-			list.add(new PDFQuestion(parser.getFieldByXPath("/Page49/q51_sf/q51_txt"), null, null, dbQuestions.get(52).getId()));
+			list.add(new PDFQuestion(parser.getFieldByXPath("/Page48/q50_sf/q50_txt"), null, null, dbQuestions.get(51).getId()));
 			
 			PDFQuestionnaire.setList(list);
 		} catch (FileNotFoundException e) {
