@@ -143,7 +143,11 @@ public class CGRFA {
 		try {
 			AnswersList list = w.prepareAnswers(data);
 			Headers headers = w.getHeadersFromJsonResponse(data);
-			w.persistAnswers(list.getSurvey_id(), list.getAnswers());
+			int status = w.persistAnswers(list.getSurvey_id(), list.getAnswers());
+			if (status > 0) {
+				w.deleteSurvey(list.getSurvey_id());
+				return Response.status(500).build();
+			}
 			w.persistStatus(list.getSurvey_id(), list.getStatus());
 			w.updateSurveyDate(list.getSurvey_id());
 			w.updateSurveyByHeaders(list.getSurvey_id(), headers);
@@ -168,7 +172,10 @@ public class CGRFA {
 		try {
 			insertedSurvey = w.persistSurvey(w.getSurveyFromJsonHeaders(data));
 			List<Surveyanswers> list = w.getNewSurveyListOfAnswers(data, insertedSurvey);
-			w.persistListOfAnswers(list);
+			int status = w.persistListOfAnswers(list);
+			if (status > 0) {
+				return Response.status(500).build();
+			}
 			w.persistSurveyStatus(insertedSurvey);
 		} catch (IOException e) {
 			if (insertedSurvey >= 0) {
@@ -238,7 +245,10 @@ public class CGRFA {
 			
 			res.setFileName(headerOfFilePart.getFileName());
 			res.setNewFileName(finalPath + newFileName);
-			w.persistQuestionnaire(res);
+			int status = w.persistQuestionnaire(res);
+			if (status > 0) {
+				return Response.status(500).build();
+			}
 		}
 		Map<String, Object> files = new HashMap<>();
         files.put("files", list);

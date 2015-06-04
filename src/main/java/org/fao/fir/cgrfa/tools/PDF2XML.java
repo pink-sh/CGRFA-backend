@@ -22,7 +22,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 public class PDF2XML {
-	private static String INPUT = "/home/enrico/Desktop/Adobe/CGRFM_Questionnaire/CGRFA_Questionnaire_22May2015-filled.pdf";
+	private static String INPUT = "/home/enrico/Desktop/DDNR/SWEDEN_SoWBFA_TEST.pdf";
 	public static void main(String[] args) {
 		FileInputStream fileInputStream;
 		try {
@@ -38,7 +38,7 @@ public class PDF2XML {
 
 	        
 	        Transformer transformer = TransformerFactory.newInstance().newTransformer();
-	        Result output = new StreamResult(new File("/tmp/CGRFA.xml"));
+	        Result output = new StreamResult(new File("/tmp/SWEDEN_SoWBFA_TEST.pdf.xml"));
 	        Source input = new DOMSource(documentXML);
 
 	        transformer.transform(input, output);
