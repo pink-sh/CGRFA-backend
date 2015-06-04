@@ -569,7 +569,7 @@ public class Worker {
 		return headers;
 	}
 	
-	public void persistQuestionnaire(PDFQuestionList questionList) {
+	public int persistQuestionnaire(PDFQuestionList questionList) {
 		try {
 			Survey survey = new Survey();
 			survey.setCountry(in.getCountry(questionList.getCountry()).getId());
@@ -585,11 +585,17 @@ public class Worker {
 			
 			int lastId = this.persistSurvey(survey);
 			this.persistSurveyStatus(lastId);
-			this.persistQuestionnaireAnswers(questionList, lastId);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
+			try {
+				this.persistQuestionnaireAnswers(questionList, lastId);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return 1;
+			}
+		} catch (ParseException e) { 
 			e.printStackTrace();
+			return 1;
 		}
+		return 0;
 	}
 	
 	public int persistSurvey(Survey survey) {
@@ -610,7 +616,7 @@ public class Worker {
 		}
 	}
 	
-	public void persistQuestionnaireAnswers(PDFQuestionList questionList, Integer surveyId) {
+	public void persistQuestionnaireAnswers(PDFQuestionList questionList, Integer surveyId) throws Exception {
 		LinkedList<PDFQuestion> answers = questionList.getList();
 		
 		for (PDFQuestion answer: answers) {
@@ -731,10 +737,16 @@ public class Worker {
 		}
 	}
 	
-	public void persistListOfAnswers(List<Surveyanswers> list) {
+	public int persistListOfAnswers(List<Surveyanswers> list) {
 		for (Surveyanswers single : list) {
-			in.insertSurveyAnswer(single);
+			try {
+				in.insertSurveyAnswer(single);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return 1;
+			}
 		}
+		return 0;
 	}
 	
 	public void persistStatus(int survey_id, List<Status> listOfStatus) {
@@ -765,7 +777,7 @@ public class Worker {
 		in.deleteSurvey(survey_id);
 	}
 	
-	public void persistAnswers(int survey_id, List<Answer> listOfAnswer) {
+	public int persistAnswers(int survey_id, List<Answer> listOfAnswer) {
 		
 		List<Surveyanswers> storedAnswers = in.getSurveyAnswersBySurveyId(survey_id);
 		
@@ -838,7 +850,12 @@ public class Worker {
 				storedAnswer.setValue(answerInRow.getValue());
 				storedAnswer.setTableRowMultiSort(answerInRow.getMultiRowIndex());
 				
-				in.insertSurveyAnswer(storedAnswer);
+				try {
+					in.insertSurveyAnswer(storedAnswer);
+				} catch (Exception e) {
+					e.printStackTrace();
+					return 1;
+				}
 			}
 		}
 		
@@ -872,6 +889,7 @@ public class Worker {
 			
 			in.updateSurveyAnswerByPrimaryKeySelective(storedAnswer);
 		}
+		return 0;
 	}
 	
 	public Headers getHeadersFromJsonResponse(String json) throws JsonProcessingException, IOException, ParseException {

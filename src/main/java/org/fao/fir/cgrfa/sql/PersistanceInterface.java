@@ -109,7 +109,7 @@ public interface PersistanceInterface {
 						   @Param("table_id") int table_id,
 						   @Param("row_id") int row_id);
 	
-	void insertSurveyAnswer (Surveyanswers answers);
+	void insertSurveyAnswer (Surveyanswers answers) throws Exception;
 	
 	void insertSurveyStatus (Surveystatus status);
 	void insertSurveyDefaultStatus (Surveystatus status);

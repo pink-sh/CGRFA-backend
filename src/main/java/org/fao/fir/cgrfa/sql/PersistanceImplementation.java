@@ -457,13 +457,14 @@ public class PersistanceImplementation implements PersistanceInterface{
 	}
 
 	@Override
-	public void insertSurveyAnswer(Surveyanswers answers) {
+	public void insertSurveyAnswer(Surveyanswers answers) throws Exception {
 		SqlSession sqlSession = MyBatisSqlSessionFactory.getSqlSessionFactory().openSession();
 		try {
 			PersistanceInterface mapper = sqlSession.getMapper(PersistanceInterface.class);
 			mapper.insertSurveyAnswer(answers);
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
+			throw new Exception();
 		} finally {
 			sqlSession.commit();
 			sqlSession.close();
