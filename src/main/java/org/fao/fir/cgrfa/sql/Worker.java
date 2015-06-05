@@ -1449,9 +1449,11 @@ public class Worker {
 				
 				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page8/q8Table/Item[" + Integer.toString(i) + "]/q8_01/SpeciesAutosuggestionSubform/ListBoxSubform/q8_species"));
+				item.add(Worker.getFieldFromParser(parser, "/Page8/q8Table/Item[" + Integer.toString(i) + "]/q8_01/SpeciesAutosuggestionSubform/TextboxSubform/txt_input"));
 				item.add(Worker.getFieldFromParser(parser, "/Page8/q8Table/Item[" + Integer.toString(i) + "]/q8TableAnswers/Row1/q8_chk1"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page8/q8Table/Item[" + Integer.toString(i) + "]/q8TableAnswers/Row1/q8_sf1"), "q8_sf1"));
-				item.add(Worker.getFieldFromParser(parser, "/Page8/q8Table/Item[" + Integer.toString(i) + "]/q8TableAnswers/Row2/q8_chk2"));
+				item.add(Worker.getFieldFromParser(parser, "/Page8/q8Table/Item[" + Integer.toString(i) + "]/q8TableAnswers/Row2/tblHybrids1/Row1/q8_chk2"));
+				item.add(Worker.getFieldFromParser(parser, "/Page8/q8Table/Item[" + Integer.toString(i) + "]/q8TableAnswers/Row2/tblHybrids1/Row1/tblHybrids2/Row2/q8_hybrids"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page8/q8Table/Item[" + Integer.toString(i) + "]/q8TableAnswers/Row2/q8_sf2"), "q8_sf2"));
 				item.add(Worker.getFieldFromParser(parser, "/Page8/q8Table/Item[" + Integer.toString(i) + "]/q8TableAnswers/Row3/q8_chk3"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page8/q8Table/Item[" + Integer.toString(i) + "]/q8TableAnswers/Row3/q8_sf3"), "q8_sf3"));
@@ -1469,6 +1471,7 @@ public class Worker {
 				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page9/q9Table/Item[" + Integer.toString(i) + "]/q9TableFarmedSpecies/Row1/q9_native_introduced/q9_radio_native_introduced"));
 				item.add(Worker.getFieldFromParser(parser, "/Page9/q9Table/Item[" + Integer.toString(i) + "]/q9TableFarmedSpecies/Row2/SpeciesAutosuggestionSubform/ListBoxSubform/q9_species"));
+				item.add(Worker.getFieldFromParser(parser, "/Page9/q9Table/Item[" + Integer.toString(i) + "]/q9TableFarmedSpecies/Row2/SpeciesAutosuggestionSubform/TextboxSubform/txt_input"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page9/q9Table/Item[" + Integer.toString(i) + "]/q9_chk2"), "q9_chk2"));
 				item.add(Worker.getFieldFromParser(parser, "/Page9/q9Table/Item[" + Integer.toString(i) + "]/q9_chk3/q9_radio3"));
 				item.add(Worker.getFieldFromParser(parser, "/Page9/q9Table/Item[" + Integer.toString(i) + "]/q9_chk4/q9_radio4"));
@@ -1485,6 +1488,7 @@ public class Worker {
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page11/q10Table/Item"); i++) {
 				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page11/q10Table/Item[" + Integer.toString(i) + "]/q10_01/SpeciesAutosuggestionSubform/ListBoxSubform/q10_species"));
+				item.add(Worker.getFieldFromParser(parser, "/Page11/q10Table/Item[" + Integer.toString(i) + "]/q10_01/SpeciesAutosuggestionSubform/TextboxSubform/txt_input"));
 				item.add(Worker.getFieldFromParser(parser, "/Page11/q10Table/Item[" + Integer.toString(i) + "]/q10_02/q10_radio2"));
 				item.add(Worker.getFieldFromParser(parser, "/Page11/q10Table/Item[" + Integer.toString(i) + "]/q10_comments"));
 				Question10.add(new PDFTableRow(item, "Item"));
@@ -1496,6 +1500,7 @@ public class Worker {
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page12/q11Table/Item"); i++) {
 				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page12/q11Table/Item[" + Integer.toString(i) + "]/q11_01/SpeciesAutosuggestionSubform/ListBoxSubform/q11_species"));
+				item.add(Worker.getFieldFromParser(parser, "/Page12/q11Table/Item[" + Integer.toString(i) + "]/q11_01/SpeciesAutosuggestionSubform/TextboxSubform/txt_input"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page12/q11Table/Item[" + Integer.toString(i) + "]/q11_02"), "q11_02"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page12/q11Table/Item[" + Integer.toString(i) + "]/q11_03"), "q11_03"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page12/q11Table/Item[" + Integer.toString(i) + "]/q11_04"), "q11_04"));
@@ -1510,6 +1515,7 @@ public class Worker {
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page13/q12Table/Item"); i++) {
 				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page13/q12Table/Item[" + Integer.toString(i) + "]/q12_01/SpeciesAutosuggestionSubform/ListBoxSubform/q12_species"));
+				item.add(Worker.getFieldFromParser(parser, "/Page13/q12Table/Item[" + Integer.toString(i) + "]/q12_01/SpeciesAutosuggestionSubform/TextboxSubform/txt_input"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page13/q12Table/Item[" + Integer.toString(i) + "]/q12_02"), "q12_02"));
 				item.add(Worker.getFieldFromParser(parser, "/Page13/q12Table/Item[" + Integer.toString(i) + "]/q12_comments"));
 				Question12.add(new PDFTableRow(item, "Item"));
@@ -1521,6 +1527,7 @@ public class Worker {
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page14/q13Table/Item"); i++) {
 				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page14/q13Table/Item[" + Integer.toString(i) + "]/q13_01/SpeciesAutosuggestionSubform/ListBoxSubform/q13_species"));
+				item.add(Worker.getFieldFromParser(parser, "/Page14/q13Table/Item[" + Integer.toString(i) + "]/q13_01/SpeciesAutosuggestionSubform/TextboxSubform/txt_input"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page14/q13Table/Item[" + Integer.toString(i) + "]/q13_02"), "q13_02"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page14/q13Table/Item[" + Integer.toString(i) + "]/q13_03"), "q13_03"));
 				item.add(Worker.getFieldFromParser(parser, "/Page14/q13Table/Item[" + Integer.toString(i) + "]/q13_04"));
@@ -1534,6 +1541,7 @@ public class Worker {
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page15/q14Table/Item"); i++) {
 				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page15/q14Table/Item[" + Integer.toString(i) + "]/q14_01/SpeciesAutosuggestionSubform/ListBoxSubform/q14_species"));
+				item.add(Worker.getFieldFromParser(parser, "/Page15/q14Table/Item[" + Integer.toString(i) + "]/q14_01/SpeciesAutosuggestionSubform/TextboxSubform/txt_input"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page15/q14Table/Item[" + Integer.toString(i) + "]/q14_02"), "q14_02"));
 				item.add(Worker.getFieldFromParser(parser, "/Page15/q14Table/Item[" + Integer.toString(i) + "]/q14_03/q14_radio3"));
 				item.add(Worker.getFieldFromParser(parser, "/Page15/q14Table/Item[" + Integer.toString(i) + "]/q14_04/q14_radio4"));
