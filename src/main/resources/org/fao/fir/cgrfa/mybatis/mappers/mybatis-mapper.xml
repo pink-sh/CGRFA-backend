@@ -37,6 +37,7 @@
 	    <result column="header_c" property="headerC" jdbcType="VARCHAR" />
 	    <result column="header_r" property="headerR" jdbcType="VARCHAR" />
 	    <result column="header_a" property="headerA" jdbcType="VARCHAR" />
+		<result column="deleted" jdbcType="INTEGER" property="deleted" />
   	</resultMap>
   	
   	<resultMap id="TableRowsResultMap" type="org.fao.fir.cgrfa.dao.mapper.model.Questionstablesrows" >
@@ -45,6 +46,7 @@
 	    <result column="table_ID" property="tableId" jdbcType="INTEGER" />
 	    <result column="order" property="order" jdbcType="INTEGER" />
 	    <result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="deleted" jdbcType="INTEGER" property="deleted" />
  	</resultMap>
  	
  	<resultMap id="TableResultMap" type="org.fao.fir.cgrfa.dao.mapper.model.Questionstables" >
@@ -160,6 +162,7 @@
 	    <result column="table_row_id" property="tableRowId" jdbcType="INTEGER" />
 	    <result column="table_row_multi_sort" property="tableRowMultiSort" jdbcType="INTEGER" />
 	    <result column="deleted" property="deleted" jdbcType="INTEGER" />
+	    <result column="value_opt" property="valueOpt" jdbcType="VARCHAR" />
 	</resultMap>
 
 	
@@ -174,9 +177,33 @@
 	    <id column="ID" property="id" jdbcType="INTEGER" />
 		<result column="type" property="type" jdbcType="VARCHAR" />
 	</resultMap>
+	
+	<resultMap id="SpeciesMap" type="org.fao.fir.cgrfa.dao.mapper.model.Species">
+		<id column="ID" jdbcType="INTEGER" property="id" />
+		<result column="value" jdbcType="VARCHAR" property="value" />
+		<result column="name_e" jdbcType="VARCHAR" property="nameE" />
+		<result column="name_f" jdbcType="VARCHAR" property="nameF" />
+		<result column="name_s" jdbcType="VARCHAR" property="nameS" />
+		<result column="name_c" jdbcType="VARCHAR" property="nameC" />
+		<result column="name_r" jdbcType="VARCHAR" property="nameR" />
+		<result column="name_a" jdbcType="VARCHAR" property="nameA" />
+		<result column="scientific_name" jdbcType="VARCHAR" property="scientificName" />
+	</resultMap>
 	<!--   SYSTEM QUERIES - START -->
 	<select id="testMe" parameterType="int" resultMap="BaseResultMap">
 		SELECT * FROM "Questions" where "ID" = #{id} AND "deleted" = 0
+	</select>
+	
+	<select id="getSpeciesByName" resultMap="SpeciesMap">
+		SELECT * FROM "Species" WHERE
+		"name_e" = #{name} OR 
+		"name_f" = #{name} OR 
+		"name_s" = #{name} OR 
+		"name_c" = #{name} OR 
+		"name_r" = #{name} OR 
+		"name_a" = #{name} OR 
+		"scientific_name" = #{name}  
+		LIMIT 1
 	</select>
 	
 	<select id="getAllQuestions" parameterType="int" resultMap="BaseResultMap">
@@ -198,31 +225,31 @@
 	</select>
 	
 	<select id="getTableColumnsById" parameterType="int" resultMap="TableColumnsResultMap">
-		SELECT * FROM "QuestionsTablesColumns" where table_id = #{id} order by "order";
+		SELECT * FROM "QuestionsTablesColumns" where table_id = #{id} AND "deleted" = 0 order by "order";
 	</select>
 	
 	<select id="getTableColumnsByName" resultMap="TableColumnsResultMap">
-		SELECT * FROM "QuestionsTablesColumns" where table_id = (SELECT "ID" from "QuestionsTables" WHERE name = #{name} AND "deleted" = 0) order by "order"
+		SELECT * FROM "QuestionsTablesColumns" where table_id = (SELECT "ID" from "QuestionsTables" WHERE name = #{name} AND "deleted" = 0) AND "deleted" = 0 order by "order"
 	</select>
 	
 	<select id="getTableRowsById" parameterType="int" resultMap="TableRowsResultMap">
-		SELECT * FROM "QuestionsTablesRows" where "table_ID" = #{id};
+		SELECT * FROM "QuestionsTablesRows" where "table_ID" = #{id} AND "deleted" = 0;
 	</select>
 	
 	<select id="getTableRowsByName" resultMap="TableRowsResultMap">
-		SELECT * FROM "QuestionsTablesRows" where "table_ID" = (SELECT "ID" from "QuestionsTables" WHERE name = #{name} AND "deleted" = 0) order by "order";
+		SELECT * FROM "QuestionsTablesRows" where "table_ID" = (SELECT "ID" from "QuestionsTables" WHERE name = #{name} AND "deleted" = 0) AND "deleted" = 0 order by "order";
 	</select>
 	
 	<select id="getTableRowByNameTableName" resultMap="TableRowsResultMap">
-		SELECT * FROM "QuestionsTablesRows" where "table_ID" = (SELECT "ID" from "QuestionsTables" WHERE name = #{table_name} AND "deleted" = 0) AND "name" = #{row_name} order by "order";
+		SELECT * FROM "QuestionsTablesRows" where "table_ID" = (SELECT "ID" from "QuestionsTables" WHERE name = #{table_name} AND "deleted" = 0) AND "deleted" = 0 AND "name" = #{row_name} order by "order";
 	</select> 
 	
 	<select id="getCellFieldsByCoordinates" resultMap="TableCellFields">
-		SELECT * FROM "QuestionsTablesFields" where "table_id" = #{table_id} and "column_id" = #{column_id} and "row_id" = #{row_id};
+		SELECT * FROM "QuestionsTablesFields" where "table_id" = #{table_id} and "column_id" = #{column_id} and "row_id" = #{row_id} AND "deleted" = 0;
   	</select>
   	
   	<select id="getCellFieldByTableRowAndName" resultMap="TableCellFields">
-		SELECT * FROM "QuestionsTablesFields" where "table_id" = #{table_id} and "row_id" = #{row_id} and "name" = #{name};
+		SELECT * FROM "QuestionsTablesFields" where "table_id" = #{table_id} and "row_id" = #{row_id} and "name" = #{name} AND "deleted" = 0;
   	</select>
   	
   	<select id="getDistinctControlledListIds" resultType="int">
@@ -358,7 +385,7 @@
   	
   	<select id="getNumberOfInsertedMultiRows" resultType="integer">
   	<![CDATA[ 
-  		select max(table_row_multi_sort) from "SurveyAnswers" where table_id = #{table_id} and table_row_id = #{row_id} and survey_id = #{survey_id} AND "deleted" < 1;
+  		select COALESCE(max(table_row_multi_sort), 0) from "SurveyAnswers" where table_id = #{table_id} and table_row_id = #{row_id} and survey_id = #{survey_id} AND "deleted" < 1;
   	]]>
   	</select>
   	
@@ -411,10 +438,10 @@
     <insert id="insertSurveyAnswer" parameterType="org.fao.fir.cgrfa.dao.mapper.model.Surveyanswers" useGeneratedKeys="true" keyProperty="id" keyColumn="ID">
 	    insert into "SurveyAnswers" (survey_id, field_id, 
 	      table_id, field, value, 
-      	  table_row_id, table_row_multi_sort)
+      	  table_row_id, table_row_multi_sort, value_opt)
 	    values (#{surveyId,jdbcType=INTEGER}, #{fieldId,jdbcType=INTEGER}, 
 	      #{tableId,jdbcType=INTEGER}, #{field,jdbcType=VARCHAR}, #{value,jdbcType=VARCHAR}, 
-      	  #{tableRowId,jdbcType=INTEGER}, #{tableRowMultiSort,jdbcType=INTEGER})
+      	  #{tableRowId,jdbcType=INTEGER}, #{tableRowMultiSort,jdbcType=INTEGER}, #{valueOpt,jdbcType=VARCHAR})
 	</insert>
 	 
 	<insert id="insertSurveyDefaultStatus" parameterType="org.fao.fir.cgrfa.dao.mapper.model.Surveystatus"  useGeneratedKeys="true" keyProperty="id" keyColumn="ID">
@@ -473,6 +500,9 @@
 	      </if>
 	      <if test="deleted != null" >
         	"deleted" = #{deleted,jdbcType=INTEGER},
+      	  </if>
+      	  <if test="valueOpt != null" >
+        	"value_opt" = #{valueOpt,jdbcType=VARCHAR},
       	  </if>
 	    </set>
 	    where "ID" = #{id,jdbcType=INTEGER}
