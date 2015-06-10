@@ -15,6 +15,7 @@ public @Data class Field {
 	String text_a;
 	String text_r;
 	String value;
+	String value_opt;
 	String htmlId;
 	String default_value;
 }
