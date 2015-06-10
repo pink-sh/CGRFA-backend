@@ -13,6 +13,7 @@ import org.fao.fir.cgrfa.dao.mapper.model.Questionstablescolumns;
 import org.fao.fir.cgrfa.dao.mapper.model.Questionstablesfields;
 import org.fao.fir.cgrfa.dao.mapper.model.Questionstablesrows;
 import org.fao.fir.cgrfa.dao.mapper.model.Questiontype;
+import org.fao.fir.cgrfa.dao.mapper.model.Species;
 import org.fao.fir.cgrfa.dao.mapper.model.Survey;
 import org.fao.fir.cgrfa.dao.mapper.model.Surveyanswers;
 import org.fao.fir.cgrfa.dao.mapper.model.Surveystatus;
@@ -21,6 +22,9 @@ import org.fao.fir.cgrfa.objects.ControlledEntry;
 public interface PersistanceInterface {
 	
 	Questions testMe (@Param("id") int id);
+	
+	Species getSpeciesByName (@Param("name") String name);
+	
 	List<Questions> getAllQuestions();
 	
 	

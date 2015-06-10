@@ -13,6 +13,7 @@ import org.fao.fir.cgrfa.dao.mapper.model.Questionstablescolumns;
 import org.fao.fir.cgrfa.dao.mapper.model.Questionstablesfields;
 import org.fao.fir.cgrfa.dao.mapper.model.Questionstablesrows;
 import org.fao.fir.cgrfa.dao.mapper.model.Questiontype;
+import org.fao.fir.cgrfa.dao.mapper.model.Species;
 import org.fao.fir.cgrfa.dao.mapper.model.Survey;
 import org.fao.fir.cgrfa.dao.mapper.model.Surveyanswers;
 import org.fao.fir.cgrfa.dao.mapper.model.Surveystatus;
@@ -27,6 +28,17 @@ public class PersistanceImplementation implements PersistanceInterface{
 		try {
 			PersistanceInterface mapper = sqlSession.getMapper(PersistanceInterface.class);
 			return mapper.testMe(id);
+		} finally {
+			sqlSession.close();
+		}
+	}
+	
+	@Override
+	public Species getSpeciesByName(String name) {
+		SqlSession sqlSession = MyBatisSqlSessionFactory.getSqlSessionFactory().openSession();
+		try {
+			PersistanceInterface mapper = sqlSession.getMapper(PersistanceInterface.class);
+			return mapper.getSpeciesByName(name);
 		} finally {
 			sqlSession.close();
 		}

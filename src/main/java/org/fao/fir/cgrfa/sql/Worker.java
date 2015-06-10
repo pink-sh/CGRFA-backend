@@ -44,6 +44,7 @@ import org.fao.fir.cgrfa.dao.mapper.model.Questionstablescolumns;
 import org.fao.fir.cgrfa.dao.mapper.model.Questionstablesfields;
 import org.fao.fir.cgrfa.dao.mapper.model.Questionstablesrows;
 import org.fao.fir.cgrfa.dao.mapper.model.Questiontype;
+import org.fao.fir.cgrfa.dao.mapper.model.Species;
 import org.fao.fir.cgrfa.dao.mapper.model.Survey;
 import org.fao.fir.cgrfa.dao.mapper.model.Surveyanswers;
 import org.fao.fir.cgrfa.dao.mapper.model.Surveystatus;
@@ -314,6 +315,7 @@ public class Worker {
 					Table table = new Table();
 					table.setMultiCount(0);
 					table.setName(qf.getName());
+
 					Questionstables dbTab = in.getTableByName(qf.getName());
 					List<Questionstablescolumns> qtc = in.getTableColumnsById(dbTab.getId());
 					
@@ -394,6 +396,9 @@ public class Worker {
 										
 										if (answer != null) {
 											field.setValue(answer.getValue());
+											if (answer.getValueOpt() != null) {
+												field.setValue_opt(answer.getValueOpt());
+											}
 											field.setHtmlId(buildHtmlID(answer));
 										} else {
 											field.setHtmlId(null);
@@ -439,6 +444,9 @@ public class Worker {
 												qtcf.getId(), dbTab.getId(), row.getId());
 										if (answer != null) {
 											field.setValue(answer.getValue());
+											if (answer.getValueOpt() != null) {
+												field.setValue_opt(answer.getValueOpt());
+											}
 											field.setHtmlId(buildHtmlID(answer));
 										} else {
 											field.setHtmlId(null);
@@ -486,6 +494,9 @@ public class Worker {
 	
 					if (answer != null) {
 						field.setValue(answer.getValue());
+						if (answer.getValueOpt() != null) {
+							field.setValue_opt(answer.getValueOpt());
+						}
 						field.setHtmlId(buildHtmlID(answer));
 					} else {
 						field.setHtmlId(null);
@@ -519,7 +530,10 @@ public class Worker {
 					String table = ent.getExternalCl();
 					String key = ent.getExternalClKey();
 					String value = ent.getExternalClValue();
-					entryList = in.getExternalControlledList(table, value, key);
+					String[] clValues = value.split(",");
+					for (String clV : clValues) {
+						entryList.addAll(in.getExternalControlledList(table, clV.trim(), key));
+					}
 				} else {
 					ControlledEntry entry = new ControlledEntry();
 					entry.setKey(ent.getValue());
@@ -631,6 +645,9 @@ public class Worker {
 					sa.setField(field);
 					sa.setValue(value);
 					sa.setFieldId(sFld.getId());
+					if (answer.getSingleQuestion().getValueOpt() != null) {
+						sa.setValueOpt(answer.getSingleQuestion().getValueOpt());
+					}
 					in.insertSurveyAnswer(sa);
 				} else {
 					/*
@@ -654,6 +671,9 @@ public class Worker {
 							sa.setField(field);
 							sa.setValue(value);
 							sa.setFieldId(sFld.getId());
+							if (sField.getValueOpt() != null) {
+								sa.setValueOpt(sField.getValueOpt());
+							}
 							in.insertSurveyAnswer(sa);
 						} else {
 							/*
@@ -682,6 +702,7 @@ public class Worker {
 						 * 
 						 */
 					}
+
 					Questionstablesrows sRow = in.getTableRowByNameTableName(sTbl.getName(), row.getName());
 					if (sRow == null) {
 						/*
@@ -721,6 +742,9 @@ public class Worker {
 								sa.setTableRowMultiSort(multi);
 							} else {
 								sa.setTableRowMultiSort(null);
+							}
+							if (sField.getValueOpt() != null) {
+								sa.setValueOpt(sField.getValueOpt());
 							}
 							in.insertSurveyAnswer(sa);
 						} else {
@@ -785,18 +809,59 @@ public class Worker {
 		for (Answer answer : listOfAnswer) {
 			if (!answer.getId().startsWith("NEWROW")) {
 				int id = Integer.parseInt(this.getAnswerMeta(answer, "id"));
+
 				for (Surveyanswers storedAnswer : storedAnswers) {
 					if (id == storedAnswer.getId()) {
-						if (answer.getValue() == null) {
+						if (answer.getValue() == null && answer.getValue_opt() == null) {
+							boolean update = false;
 							if (storedAnswer.getValue() != null) {
 								storedAnswer.setValue(null);
+								update = true;
+							}
+							if (storedAnswer.getValueOpt() != null) {
+								storedAnswer.setValueOpt(null);
+								update = true;
+							}
+							if (update) {
 								in.updateSurveyAnswerByPrimaryKeySelective(storedAnswer);
 							}
-						}
-						else if (!answer.getValue().equalsIgnoreCase(storedAnswer.getValue())) {
-							storedAnswer.setValue(answer.getValue());
-							in.updateSurveyAnswerByPrimaryKeySelective(storedAnswer);
-							
+						} else {
+							boolean update = false;
+							if (answer.getValue() != null) {
+								if (storedAnswer.getValue() != null) {
+									if (!answer.getValue().equalsIgnoreCase(storedAnswer.getValue())) {
+										storedAnswer.setValue(answer.getValue());
+										update = true;
+									}
+								} else {
+									storedAnswer.setValue(answer.getValue());
+									update = true;
+								}
+							}
+							if (answer.getValue_opt() != null) {
+								if (storedAnswer.getValueOpt() != null) {
+									if (!answer.getValue_opt().equalsIgnoreCase(storedAnswer.getValueOpt())) {
+										storedAnswer.setValueOpt(answer.getValue_opt());
+										update = true;
+									}
+								} else {
+									storedAnswer.setValueOpt(answer.getValue_opt());
+									update = true;
+								}
+							}
+							if (update) {
+								if (storedAnswer.getValueOpt() != null) {
+									Species species = in.getSpeciesByName(storedAnswer.getValueOpt());
+									if (species != null) {
+										if (!species.getValue().equalsIgnoreCase(storedAnswer.getValue())) {
+											storedAnswer.setValue("");
+										}
+									} else {
+										storedAnswer.setValue("");
+									}
+								}
+								in.updateSurveyAnswerByPrimaryKeySelective(storedAnswer);
+							}
 						}
 						break;
 					}
@@ -814,6 +879,7 @@ public class Worker {
 				AnswerInRow answerInRow = new AnswerInRow();
 				answerInRow.setId(answer.getId());
 				answerInRow.setValue(answer.getValue());
+				answerInRow.setValue_opt(answer.getValue_opt());
 				
 				int id = Integer.parseInt(this.getAnswerMeta(answer, "id"));
 				int tblid = Integer.parseInt(this.getAnswerMeta(answer, "tblid"));
@@ -848,8 +914,8 @@ public class Worker {
 				
 				storedAnswer.setId(null);
 				storedAnswer.setValue(answerInRow.getValue());
+				storedAnswer.setValueOpt(answerInRow.getValue_opt());
 				storedAnswer.setTableRowMultiSort(answerInRow.getMultiRowIndex());
-				
 				try {
 					in.insertSurveyAnswer(storedAnswer);
 				} catch (Exception e) {
@@ -1034,9 +1100,15 @@ public class Worker {
 		String[] splittedValues = fieldName.split("!");
 		String newId = "";
 		boolean hasCounter = false;
+		boolean isAutosuggest = false;
+		boolean isAutosuggestCode = false;
 		for (int i = 0; i< splittedValues.length; i++) {
 			if (splittedValues[i].startsWith("[counter")) {
 				hasCounter = true;
+			} else if (splittedValues[i].startsWith("[autosuggestcode")) {
+				isAutosuggestCode = true;
+			} else if (splittedValues[i].startsWith("[autosuggest")) {
+				isAutosuggest = true;
 			} else {
 				newId = newId + splittedValues[i] + "!";
 			}
@@ -1044,24 +1116,43 @@ public class Worker {
 		newId = newId.substring(0, newId.length()-1);
 		
 		if (!hasCounter) {
-			answer.setId(fieldName);
-			if (node.get(fieldName).asText().equalsIgnoreCase("0")) {
-				answer.setValue("0");
-			} else {
+			if (isAutosuggest && !isAutosuggestCode) {
+				answer.setId(fieldName);
 				if (node.get(fieldName).getElements().hasNext()) {
-					String newValue = "";
-					Iterator<JsonNode> subArrayNode = node.get(fieldName).getElements();
-					while (subArrayNode.hasNext()) {
-						JsonNode subNode = subArrayNode.next();
-						newValue = newValue + subNode.get("id").asText() + ",";
-					}
-					if (!newValue.equalsIgnoreCase("")) {
-						answer.setValue(newValue.substring(0, newValue.length()-1));
-					} else {
-						answer.setValue(null);
-					}
+					answer.setValue_opt(node.get(fieldName).get("display").asText());
+					answer.setValue(node.get(fieldName).get("value").asText());
 				} else {
-					answer.setValue(node.get(fieldName).asText());
+					String speciesName = node.get(fieldName).asText();
+					answer.setValue_opt(speciesName);
+					String valueOpt = node.get(fieldName + "![autosuggestcode]").asText();
+					if (valueOpt != null) {
+						Species sp = in.getSpeciesByName(speciesName.trim());
+						if (sp != null) {
+							answer.setValue(node.get(fieldName + "![autosuggestcode]").asText());
+						}
+					}
+				}
+			} else if (isAutosuggest && isAutosuggestCode) { return null;}
+			else {
+				answer.setId(fieldName);
+				if (node.get(fieldName).asText().equalsIgnoreCase("0")) {
+					answer.setValue("0");
+				} else {
+					if (node.get(fieldName).getElements().hasNext()) {
+						String newValue = "";
+						Iterator<JsonNode> subArrayNode = node.get(fieldName).getElements();
+						while (subArrayNode.hasNext()) {
+							JsonNode subNode = subArrayNode.next();
+							newValue = newValue + subNode.get("id").asText() + ",";
+						}
+						if (!newValue.equalsIgnoreCase("")) {
+							answer.setValue(newValue.substring(0, newValue.length()-1));
+						} else {
+							answer.setValue(null);
+						}
+					} else {
+						answer.setValue(node.get(fieldName).asText());
+					}
 				}
 			}
 		} else {
@@ -1135,6 +1226,7 @@ public class Worker {
 		
 		List<Surveyanswers> listOfAnswers = new ArrayList<Surveyanswers>();
 		for (String fieldName : collapsedObject.keySet()) {
+
 			String value = collapsedObject.get(fieldName);
 			Surveyanswers answer = new Surveyanswers();
 			answer.setSurveyId(survey_id);
@@ -1147,6 +1239,8 @@ public class Worker {
 				
 				Pattern p = Pattern.compile("\\[(.*?)\\]");
 				Matcher m = p.matcher(fieldName);
+				boolean isAutosuggest = false;
+				boolean isAutosuggestCode = false;
 				while (m.find()) {
 					String val = m.group(1);
 					if (val.startsWith("id")) {
@@ -1175,11 +1269,30 @@ public class Worker {
 						if (multisort == 1) {
 							answer.setTableRowMultiSort(1);
 						}
+					} else if (val.startsWith("autosuggestcode")) {
+						isAutosuggestCode = true;
+					} else if (val.startsWith("autosuggest")) {
+						isAutosuggest = true;
+					}
+				}
+				if (isAutosuggest && !isAutosuggestCode) {
+					String speciesName = collapsedObject.get(fieldName);
+					answer.setValueOpt(speciesName);
+					String valueOpt = collapsedObject.get(fieldName + "![autosuggestcode]");
+					if (valueOpt != null) {
+						Species sp = in.getSpeciesByName(speciesName.trim());
+						if (sp != null) {
+							answer.setValue(collapsedObject.get(fieldName + "![autosuggestcode]"));
+						}
 					}
 				}
 				answer.setDeleted(0);
 				if (answer.getField() == null && answer.getValue() == null) {}
-				else { listOfAnswers.add(answer); }
+				else {
+					if (!isAutosuggestCode) {
+						listOfAnswers.add(answer); 
+					}
+				}
 			} else {
 				String[] split = fieldName.split("!");
 				String newFieldName = "";
@@ -1193,6 +1306,8 @@ public class Worker {
 					delta = Integer.parseInt(m.group(1));
 				}
 				m = p.matcher(newFieldName);
+				boolean isAutosuggest = false;
+				boolean isAutosuggestCode = false;
 				while (m.find()) {
 					String val = m.group(1);
 					if (val.startsWith("id")) {
@@ -1217,11 +1332,30 @@ public class Worker {
 						if (multisort == 1) {
 							answer.setTableRowMultiSort(1 + (delta + 1));
 						}
+					} else if (val.startsWith("autosuggestcode")) {
+						isAutosuggestCode = true;
+					} else if (val.startsWith("autosuggest")) {
+						isAutosuggest = true;
+					}
+				}
+				if (isAutosuggest && !isAutosuggestCode) {
+					String speciesName = collapsedObject.get(fieldName);
+					answer.setValueOpt(speciesName);
+					String valueOpt = collapsedObject.get(fieldName + "![autosuggestcode]");
+					if (valueOpt != null) {
+						Species sp = in.getSpeciesByName(speciesName.trim());
+						if (sp != null) {
+							answer.setValue(collapsedObject.get(fieldName + "![autosuggestcode]"));
+						}
 					}
 				}
 				answer.setDeleted(0);
 				if (answer.getField() == null && answer.getValue() == null) {}
-				else { listOfAnswers.add(answer); }
+				else { 
+					if (!isAutosuggestCode) {
+						listOfAnswers.add(answer); 
+					}
+				}
 			}
 		}
 		
@@ -1445,11 +1579,11 @@ public class Worker {
 			
 			//QUESTION 8
 			LinkedList<PDFTableRow> Question8 = new LinkedList<PDFTableRow>();
-			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page8/q8Table/Item"); i++) {
-				
+			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page8/q8Table/Item"); i++) {			
 				List<PDFField> item = new ArrayList<PDFField>();
-				item.add(Worker.getFieldFromParser(parser, "/Page8/q8Table/Item[" + Integer.toString(i) + "]/q8_01/SpeciesAutosuggestionSubform/ListBoxSubform/q8_species"));
-				item.add(Worker.getFieldFromParser(parser, "/Page8/q8Table/Item[" + Integer.toString(i) + "]/q8_01/SpeciesAutosuggestionSubform/TextboxSubform/txt_input"));
+				String autosuggestCode = "/Page8/q8Table/Item[" + Integer.toString(i) + "]/q8_01/SpeciesAutosuggestionSubform/ListBoxSubform/q8_species";
+				String autosuggestText = "/Page8/q8Table/Item[" + Integer.toString(i) + "]/q8_01/SpeciesAutosuggestionSubform/TextboxSubform/txt_input";
+				item.add(Worker.getFieldFromParser(parser, autosuggestCode, autosuggestText));
 				item.add(Worker.getFieldFromParser(parser, "/Page8/q8Table/Item[" + Integer.toString(i) + "]/q8TableAnswers/Row1/q8_chk1"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page8/q8Table/Item[" + Integer.toString(i) + "]/q8TableAnswers/Row1/q8_sf1"), "q8_sf1"));
 				item.add(Worker.getFieldFromParser(parser, "/Page8/q8Table/Item[" + Integer.toString(i) + "]/q8TableAnswers/Row2/tblHybrids1/Row1/q8_chk2"));
@@ -1470,8 +1604,9 @@ public class Worker {
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page9/q9Table/Item"); i++) {
 				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page9/q9Table/Item[" + Integer.toString(i) + "]/q9TableFarmedSpecies/Row1/q9_native_introduced/q9_radio_native_introduced"));
-				item.add(Worker.getFieldFromParser(parser, "/Page9/q9Table/Item[" + Integer.toString(i) + "]/q9TableFarmedSpecies/Row2/SpeciesAutosuggestionSubform/ListBoxSubform/q9_species"));
-				item.add(Worker.getFieldFromParser(parser, "/Page9/q9Table/Item[" + Integer.toString(i) + "]/q9TableFarmedSpecies/Row2/SpeciesAutosuggestionSubform/TextboxSubform/txt_input"));
+				String autosuggestCode = "/Page9/q9Table/Item[" + Integer.toString(i) + "]/q9TableFarmedSpecies/Row2/SpeciesAutosuggestionSubform/ListBoxSubform/q9_species";
+				String autosuggestText = "/Page9/q9Table/Item[" + Integer.toString(i) + "]/q9TableFarmedSpecies/Row2/SpeciesAutosuggestionSubform/TextboxSubform/txt_input";
+				item.add(Worker.getFieldFromParser(parser, autosuggestCode, autosuggestText));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page9/q9Table/Item[" + Integer.toString(i) + "]/q9_chk2"), "q9_chk2"));
 				item.add(Worker.getFieldFromParser(parser, "/Page9/q9Table/Item[" + Integer.toString(i) + "]/q9_chk3/q9_radio3"));
 				item.add(Worker.getFieldFromParser(parser, "/Page9/q9Table/Item[" + Integer.toString(i) + "]/q9_chk4/q9_radio4"));
@@ -1487,8 +1622,9 @@ public class Worker {
 			LinkedList<PDFTableRow> Question10 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page11/q10Table/Item"); i++) {
 				List<PDFField> item = new ArrayList<PDFField>();
-				item.add(Worker.getFieldFromParser(parser, "/Page11/q10Table/Item[" + Integer.toString(i) + "]/q10_01/SpeciesAutosuggestionSubform/ListBoxSubform/q10_species"));
-				item.add(Worker.getFieldFromParser(parser, "/Page11/q10Table/Item[" + Integer.toString(i) + "]/q10_01/SpeciesAutosuggestionSubform/TextboxSubform/txt_input"));
+				String autosuggestCode = "/Page11/q10Table/Item[" + Integer.toString(i) + "]/q10_01/SpeciesAutosuggestionSubform/ListBoxSubform/q10_species";
+				String autosuggestText = "/Page11/q10Table/Item[" + Integer.toString(i) + "]/q10_01/SpeciesAutosuggestionSubform/TextboxSubform/txt_input";
+				item.add(Worker.getFieldFromParser(parser, autosuggestCode, autosuggestText));
 				item.add(Worker.getFieldFromParser(parser, "/Page11/q10Table/Item[" + Integer.toString(i) + "]/q10_02/q10_radio2"));
 				item.add(Worker.getFieldFromParser(parser, "/Page11/q10Table/Item[" + Integer.toString(i) + "]/q10_comments"));
 				Question10.add(new PDFTableRow(item, "Item"));
@@ -1499,8 +1635,9 @@ public class Worker {
 			LinkedList<PDFTableRow> Question11 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page12/q11Table/Item"); i++) {
 				List<PDFField> item = new ArrayList<PDFField>();
-				item.add(Worker.getFieldFromParser(parser, "/Page12/q11Table/Item[" + Integer.toString(i) + "]/q11_01/SpeciesAutosuggestionSubform/ListBoxSubform/q11_species"));
-				item.add(Worker.getFieldFromParser(parser, "/Page12/q11Table/Item[" + Integer.toString(i) + "]/q11_01/SpeciesAutosuggestionSubform/TextboxSubform/txt_input"));
+				String autosuggestCode = "/Page12/q11Table/Item[" + Integer.toString(i) + "]/q11_01/SpeciesAutosuggestionSubform/ListBoxSubform/q11_species";
+				String autosuggestText = "/Page12/q11Table/Item[" + Integer.toString(i) + "]/q11_01/SpeciesAutosuggestionSubform/TextboxSubform/txt_input";
+				item.add(Worker.getFieldFromParser(parser, autosuggestCode, autosuggestText));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page12/q11Table/Item[" + Integer.toString(i) + "]/q11_02"), "q11_02"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page12/q11Table/Item[" + Integer.toString(i) + "]/q11_03"), "q11_03"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page12/q11Table/Item[" + Integer.toString(i) + "]/q11_04"), "q11_04"));
@@ -1514,8 +1651,9 @@ public class Worker {
 			LinkedList<PDFTableRow> Question12 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page13/q12Table/Item"); i++) {
 				List<PDFField> item = new ArrayList<PDFField>();
-				item.add(Worker.getFieldFromParser(parser, "/Page13/q12Table/Item[" + Integer.toString(i) + "]/q12_01/SpeciesAutosuggestionSubform/ListBoxSubform/q12_species"));
-				item.add(Worker.getFieldFromParser(parser, "/Page13/q12Table/Item[" + Integer.toString(i) + "]/q12_01/SpeciesAutosuggestionSubform/TextboxSubform/txt_input"));
+				String autosuggestCode = "/Page13/q12Table/Item[" + Integer.toString(i) + "]/q12_01/SpeciesAutosuggestionSubform/ListBoxSubform/q12_species";
+				String autosuggestText = "/Page13/q12Table/Item[" + Integer.toString(i) + "]/q12_01/SpeciesAutosuggestionSubform/TextboxSubform/txt_input";
+				item.add(Worker.getFieldFromParser(parser, autosuggestCode, autosuggestText));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page13/q12Table/Item[" + Integer.toString(i) + "]/q12_02"), "q12_02"));
 				item.add(Worker.getFieldFromParser(parser, "/Page13/q12Table/Item[" + Integer.toString(i) + "]/q12_comments"));
 				Question12.add(new PDFTableRow(item, "Item"));
@@ -1526,8 +1664,9 @@ public class Worker {
 			LinkedList<PDFTableRow> Question13 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page14/q13Table/Item"); i++) {
 				List<PDFField> item = new ArrayList<PDFField>();
-				item.add(Worker.getFieldFromParser(parser, "/Page14/q13Table/Item[" + Integer.toString(i) + "]/q13_01/SpeciesAutosuggestionSubform/ListBoxSubform/q13_species"));
-				item.add(Worker.getFieldFromParser(parser, "/Page14/q13Table/Item[" + Integer.toString(i) + "]/q13_01/SpeciesAutosuggestionSubform/TextboxSubform/txt_input"));
+				String autosuggestCode = "/Page14/q13Table/Item[" + Integer.toString(i) + "]/q13_01/SpeciesAutosuggestionSubform/ListBoxSubform/q13_species";
+				String autosuggestText = "/Page14/q13Table/Item[" + Integer.toString(i) + "]/q13_01/SpeciesAutosuggestionSubform/TextboxSubform/txt_input";
+				item.add(Worker.getFieldFromParser(parser, autosuggestCode, autosuggestText));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page14/q13Table/Item[" + Integer.toString(i) + "]/q13_02"), "q13_02"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page14/q13Table/Item[" + Integer.toString(i) + "]/q13_03"), "q13_03"));
 				item.add(Worker.getFieldFromParser(parser, "/Page14/q13Table/Item[" + Integer.toString(i) + "]/q13_04"));
@@ -1540,8 +1679,9 @@ public class Worker {
 			LinkedList<PDFTableRow> Question14 = new LinkedList<PDFTableRow>();
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page15/q14Table/Item"); i++) {
 				List<PDFField> item = new ArrayList<PDFField>();
-				item.add(Worker.getFieldFromParser(parser, "/Page15/q14Table/Item[" + Integer.toString(i) + "]/q14_01/SpeciesAutosuggestionSubform/ListBoxSubform/q14_species"));
-				item.add(Worker.getFieldFromParser(parser, "/Page15/q14Table/Item[" + Integer.toString(i) + "]/q14_01/SpeciesAutosuggestionSubform/TextboxSubform/txt_input"));
+				String autosuggestCode = "/Page15/q14Table/Item[" + Integer.toString(i) + "]/q14_01/SpeciesAutosuggestionSubform/ListBoxSubform/q14_species";
+				String autosuggestText = "/Page15/q14Table/Item[" + Integer.toString(i) + "]/q14_01/SpeciesAutosuggestionSubform/TextboxSubform/txt_input";
+				item.add(Worker.getFieldFromParser(parser, autosuggestCode, autosuggestText));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page15/q14Table/Item[" + Integer.toString(i) + "]/q14_02"), "q14_02"));
 				item.add(Worker.getFieldFromParser(parser, "/Page15/q14Table/Item[" + Integer.toString(i) + "]/q14_03/q14_radio3"));
 				item.add(Worker.getFieldFromParser(parser, "/Page15/q14Table/Item[" + Integer.toString(i) + "]/q14_04/q14_radio4"));
@@ -1834,19 +1974,34 @@ public class Worker {
 			
 			//QUESTION 40
 			LinkedList<PDFTableRow> Question40 = new LinkedList<PDFTableRow>();
-			for (int i = 1; i <= 5; i++) {
+			/*for (int i = 1; i <= 5; i++) {
 				List<PDFField> item = new ArrayList<PDFField>();
 				item.add(Worker.getFieldFromParser(parser, "/Page40/q40Table/Row" + Integer.toString(i) + "/q40_txt_institution"));
 				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page40/q40Table/Row" + Integer.toString(i) + "/q40_sf_03"), "q40_sf_03"));
 				item.add(Worker.getFieldFromParser(parser, "/Page40/q40Table/Row" + Integer.toString(i) + "/q40_txt_comments"));
 				Question40.add(new PDFTableRow(item, "Row" + Integer.toString(i)));
-			}
+			}*/
 			for (int i = 1; i <= parser.getNumberOfItemsByXPath("/Page40/q40Table/Item"); i++) {
 				List<PDFField> item = new ArrayList<PDFField>();
-				item.add(Worker.getFieldFromParser(parser, "/Page40/q40Table/Item[" + Integer.toString(i) + "]/tblItem/Row3/q40_txt_thematic"));
-				item.add(Worker.getFieldFromParser(parser, "/Page40/q40Table/Item[" + Integer.toString(i) + "]/q40_thematic_area"));
-				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page40/q40Table/Item[" + Integer.toString(i) + "]/q40_sf_03"), "q40_sf_03"));
-				item.add(Worker.getFieldFromParser(parser, "/Page40/q40Table/Item[" + Integer.toString(i) + "]/q40_txt_comments"));
+				item.add(Worker.getFieldFromParser(parser, "/Page40/q40Table/Item[" + Integer.toString(i) + "]/txt_institution"));
+				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page40/q40Table/Item[" + Integer.toString(i) + "]/q40TableAnswers/Row1/q40_sf_03_01"), "q40_sf_03_01"));
+				item.add(Worker.getFieldFromParser(parser, "/Page40/q40Table/Item[" + Integer.toString(i) + "]/q40TableAnswers/Row1/q40_comments_01"));
+				
+
+				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page40/q40Table/Item[" + Integer.toString(i) + "]/q40TableAnswers/Row2/q40_sf_03_02"), "q40_sf_03_02"));
+				item.add(Worker.getFieldFromParser(parser, "/Page40/q40Table/Item[" + Integer.toString(i) + "]/q40TableAnswers/Row2/q40_comments_02"));
+				
+
+				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page40/q40Table/Item[" + Integer.toString(i) + "]/q40TableAnswers/Row3/q40_sf_03_03"), "q40_sf_03_03"));
+				item.add(Worker.getFieldFromParser(parser, "/Page40/q40Table/Item[" + Integer.toString(i) + "]/q40TableAnswers/Row3/q40_comments_03"));
+				
+
+				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page40/q40Table/Item[" + Integer.toString(i) + "]/q40TableAnswers/Row4/q40_sf_03_04"), "q40_sf_03_04"));
+				item.add(Worker.getFieldFromParser(parser, "/Page40/q40Table/Item[" + Integer.toString(i) + "]/q40TableAnswers/Row4/q40_comments_04"));
+				
+
+				item.add(Worker.buildCheckBoxList(parser.getSubformByXPath("/Page40/q40Table/Item[" + Integer.toString(i) + "]/q40TableAnswers/Row5/q40_sf_03_05"), "q40_sf_03_05"));
+				item.add(Worker.getFieldFromParser(parser, "/Page40/q40Table/Item[" + Integer.toString(i) + "]/q40TableAnswers/Row5/q40_comments_05"));
 				Question40.add(new PDFTableRow(item, "Item"));
 			}
 			list.add(new PDFQuestion(null, null, new PDFTable(Question40, "q40Table"), dbQuestions.get(41).getId()));
@@ -1982,6 +2137,18 @@ public class Worker {
 		
 		return field;
 	}
+	
+	private static PDFField getFieldFromParser(XFA_Parser parser, String xpath1, String xpath2) {
+		PDFField field1 = Worker.getFieldFromParser(parser, xpath1);
+		PDFField field2 = Worker.getFieldFromParser(parser, xpath2);
+		
+		PDFField field = new PDFField();
+		field.setName(field1.getName());
+		field.setValue(field1.getValue());
+		field.setValueOpt(field2.getValue());
+		return field;
+	}
+	
 	
 	private static PDFField getFieldFromParser(XFA_Parser parser, String xpath) {
 		PDFField field = parser.getFieldByXPath(xpath);
