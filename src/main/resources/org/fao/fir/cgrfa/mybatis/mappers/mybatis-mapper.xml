@@ -150,6 +150,7 @@
 	    <result column="deleted" property="deleted" jdbcType="INTEGER" />
     	<result column="inserted_date" property="insertedDate" jdbcType="DATE" />
     	<result column="modified_date" property="modifiedDate" jdbcType="DATE" />
+	    <result column="log_file" property="logFile" jdbcType="VARCHAR" />
 	</resultMap>
 	
 	<resultMap id="SurveyAnswersMap" type="org.fao.fir.cgrfa.dao.mapper.model.Surveyanswers">
@@ -430,9 +431,9 @@
  	
   	<insert id="insertSurvey" parameterType="org.fao.fir.cgrfa.dao.mapper.model.Survey" useGeneratedKeys="true" keyProperty="id" keyColumn="ID">
 	    insert into "Survey" (country, name, prepared_by,
-	      date, inserted_date, modified_date)
+	      date, inserted_date, modified_date, log_file)
 	    values (#{country,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{preparedBy,jdbcType=VARCHAR},
-	      #{date,jdbcType=DATE}, #{insertedDate,jdbcType=DATE}, #{modifiedDate,jdbcType=DATE})
+	      #{date,jdbcType=DATE}, #{insertedDate,jdbcType=DATE}, #{modifiedDate,jdbcType=DATE}, #{logFile,jdbcType=VARCHAR})
     </insert>
     
     <insert id="insertSurveyAnswer" parameterType="org.fao.fir.cgrfa.dao.mapper.model.Surveyanswers" useGeneratedKeys="true" keyProperty="id" keyColumn="ID">

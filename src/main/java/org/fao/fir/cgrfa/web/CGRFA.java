@@ -36,7 +36,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
-import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.fao.fir.cgrfa.dao.mapper.model.Surveyanswers;
 import org.fao.fir.cgrfa.objects.PDFQuestionList;
@@ -54,6 +53,7 @@ import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 public class CGRFA {
 	
 	private static String FILE_NAME = "CGRFA_Questionnaire_!COUNTRY!_!DATE!.pdf";
+	private static String LOG_FILE = "CGRFA_Questionnaire_!COUNTRY!_!DATE!.txt";
 	
 	@Context ServletContext context;
 
@@ -223,6 +223,8 @@ public class CGRFA {
 			saveFile(fileInputStream, tmpFilePath);
 			
 			Worker w = new Worker();
+			String logFile = LOG_FILE.replaceFirst("!DATE!", this.getTodayDate()).replaceFirst("!COUNTRY!", UUID.randomUUID().toString());
+			w.setLogfile(finalPath + logFile);
 			PDFQuestionList res = w.parsePDF(tmpFilePath);
 			if (res == null) {
 				return Response.status(500).build();
@@ -302,9 +304,6 @@ public class CGRFA {
 			response.header("Content-Disposition",
 				"attachment; filename=" + outFileName);
 			return response.build();
-		} catch (COSVisitorException e) {
-			e.printStackTrace();
-			return Response.status(500).build();
 		} catch (IOException e) {
 			e.printStackTrace();
 			return Response.status(500).build();

@@ -23,6 +23,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.fao.fir.cgrfa.pdf.parser.objects.PDFField;
 import org.fao.fir.cgrfa.pdf.parser.objects.PDFSubform;
+import org.fao.fir.cgrfa.tools.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -40,9 +41,12 @@ private FileInputStream file;
 	
 	private List<PDFField> fields = new ArrayList<PDFField>();
 	private List<PDFSubform> subforms = new ArrayList<PDFSubform>();
+	
+	private String logFile;
 		
-	public XFA_Parser(String source) throws FileNotFoundException {
+	public XFA_Parser(String source, String logFile) throws FileNotFoundException {
 		file = new FileInputStream(source);
+		this.logFile = logFile;
 	}
 	
 	public void parse() {
@@ -102,7 +106,10 @@ private FileInputStream file;
 		
 		PDFSubform sf = this.getSubformByXPath(newPath);
 		
-		if (sf == null) { return null; }
+		if (sf == null) {
+			this.log("{Error1} Something wrong with path: " + path);
+			return null; 
+		}
 		
 		String name = "";
 		Integer index = 1;
@@ -121,6 +128,8 @@ private FileInputStream file;
 			}
 		}
 		
+
+		this.log("{Error2} Something wrong with path: " + path);
 		return null;
 	}
 	
@@ -169,7 +178,9 @@ private FileInputStream file;
 			newPath = newPath + name + "[" + Integer.toString(index) + "]" + "/";
 		}
 		PDFSubform sf = this.getSubformByXPath(newPath);
-		if (sf == null) { return 0; }
+		if (sf == null) { 
+			return 0; 
+		}
 		
 		String name = "";
 		for (String key : sp.get(sp.size()-1).keySet()) {
@@ -237,6 +248,9 @@ private FileInputStream file;
 			String nodeName = dom.item(i).getNodeName();
 			if (nodeName.equalsIgnoreCase("subform")) {
 				String nodeAttr = this.getNameAttributeFromNode(dom.item(i));
+				if (nodeAttr.equalsIgnoreCase("SpeciesAutosuggestionSubform")) {
+					System.out.println("FAFA");
+				}
 				this.parsedSubForms.setIndex(index);
 				this.parsedSubForms.setName(nodeAttr);
 				this.parsedSubForms.setSubform(this.iterateSubForm(dom.item(i).getChildNodes(), 0));
@@ -346,6 +360,7 @@ private FileInputStream file;
 		List<PDFSubform> subforms = new ArrayList<PDFSubform>();
 		
 		for (int i = 0; i < dom.getLength(); i++) {
+			Node node = dom.item(i);
 			String nodeName = dom.item(i).getNodeName();
 			
 			if (nodeName.equalsIgnoreCase("subform")) {
@@ -357,6 +372,15 @@ private FileInputStream file;
 				subforms.add(current);
 			}
 		}
+		
+		/* 09 October 2017
+		 * this is an hack for PDFs with missing TextboxSubform tag in the XML/PDF structure*/
+		subforms = this.hack(dom, subforms, "TextboxSubform", "SpeciesAutosuggestionSubform", "ListBoxSubform");
+		subforms = this.hack(dom, subforms, "q9_chk2", "Item", "q9_chk3");
+		subforms = this.hack(dom, subforms, "q9_chk6", "Item", "q9_chk3");
+		subforms = this.hack(dom, subforms, "q9_chk7", "Item", "q9_chk3");
+		subforms = this.hack(dom, subforms, new String[] {"Row1", "q8_sf1"}, "q8TableAnswers", "Row2");
+		
 		for (int i = 0; i < subforms.size(); i++) {
 			for (int j = 0; j < i; j++) {
 				if (subforms.get(j).getName().equals(subforms.get(i).getName())) {
@@ -367,6 +391,88 @@ private FileInputStream file;
 			}
 		}
 		return subforms;
+	}
+	
+	private List<PDFSubform> hack(NodeList dom, List<PDFSubform> source, String toAdd, String parent, String brother) {
+		for (int i = 0; i < dom.getLength(); i++) {
+			Node node = dom.item(i);
+			String nodeName = dom.item(i).getNodeName();
+			
+			if (nodeName.equalsIgnoreCase("subform")) {
+				String nodeAttr = this.getNameAttributeFromNode(dom.item(i));
+				if (nodeAttr.equalsIgnoreCase(parent)) {
+					for (PDFSubform check : source) {
+						if (check.getName().equalsIgnoreCase(parent)) {
+							boolean found = false;
+							Integer index = null;
+							for (PDFSubform check2 : check.getSubform()) {
+								if (check2.getName().equalsIgnoreCase(toAdd)) {
+									found = true;
+								}
+								if (check2.getName().equalsIgnoreCase(brother)) {
+									index = check2.getIndex();
+								}
+							}
+							if (!found && index != null) {
+								PDFSubform textboxSubform = new PDFSubform();
+								textboxSubform.setName(toAdd);
+								textboxSubform.setSubform(new ArrayList<PDFSubform>());
+								textboxSubform.setIndex(index);
+								check.getSubform().add(textboxSubform);
+							}
+						}
+					}
+				}
+			}
+		}
+		return source;
+	}
+	
+	private List<PDFSubform> hack(NodeList dom, List<PDFSubform> source, String[] toAdd, String parent, String brother) {
+		for (int i = 0; i < dom.getLength(); i++) {
+			Node node = dom.item(i);
+			String nodeName = dom.item(i).getNodeName();
+			
+			if (nodeName.equalsIgnoreCase("subform")) {
+				String nodeAttr = this.getNameAttributeFromNode(dom.item(i));
+				if (nodeAttr.equalsIgnoreCase(parent)) {
+					for (PDFSubform check : source) {
+						if (check.getName().equalsIgnoreCase(parent)) {
+							boolean found = false;
+							Integer index = null;
+							for (PDFSubform check2 : check.getSubform()) {
+								if (check2.getName().equalsIgnoreCase(toAdd[0])) {
+									found = true;
+								}
+								if (check2.getName().equalsIgnoreCase(brother)) {
+									index = check2.getIndex();
+								}
+							}
+							if (!found && index != null) {
+								PDFSubform textboxSubform = new PDFSubform();
+								textboxSubform.setName(toAdd[0]);
+								textboxSubform.setIndex(index);
+								List<PDFSubform> childs = new ArrayList<PDFSubform>();
+								for (int x = 1; x < toAdd.length; x++) {
+									PDFSubform child = new PDFSubform();
+									child.setIndex(1);
+									child.setName(toAdd[x]);
+									child.setSubform(new ArrayList<PDFSubform>());
+									childs.add(child);
+								}
+								if (!childs.isEmpty()) {
+									textboxSubform.setSubform(childs);
+								} else {
+									textboxSubform.setSubform(new ArrayList<PDFSubform>());
+								}
+								check.getSubform().add(textboxSubform);
+							}
+						}
+					}
+				}
+			}
+		}
+		return source;
 	}
 	
 	private String getNameAttributeFromNode(Node node) {
@@ -423,6 +529,16 @@ private FileInputStream file;
 	
 	private PDFSubform clone(PDFSubform sf) {
 		return new PDFSubform(sf);
+	}
+	
+	private void log(String toLog) {
+		Logger logger = new Logger(this.logFile);
+		try {
+			logger.log(toLog);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

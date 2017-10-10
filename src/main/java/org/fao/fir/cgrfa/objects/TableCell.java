@@ -4,6 +4,15 @@ import java.util.LinkedList;
 
 import lombok.Data;
 
-public @Data class TableCell {
-	LinkedList<Field> fields;
+@Data
+public class TableCell {
+	private LinkedList<Field> fields;
+
+	public LinkedList<Field> getFields() {
+		return fields;
+	}
+
+	public void setFields(LinkedList<Field> fields) {
+		this.fields = fields;
+	}
 }

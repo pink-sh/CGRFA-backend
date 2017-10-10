@@ -4,8 +4,27 @@ import java.util.Date;
 
 import lombok.Data;
 
-public @Data class Headers {
-	Country country;
-	Date date;
-	String preparedBy;
+@Data
+public class Headers {
+	private Country country;
+	private Date date;
+	private String preparedBy;
+	public Country getCountry() {
+		return country;
+	}
+	public void setCountry(Country country) {
+		this.country = country;
+	}
+	public Date getDate() {
+		return date;
+	}
+	public void setDate(Date date) {
+		this.date = date;
+	}
+	public String getPreparedBy() {
+		return preparedBy;
+	}
+	public void setPreparedBy(String preparedBy) {
+		this.preparedBy = preparedBy;
+	}
 }

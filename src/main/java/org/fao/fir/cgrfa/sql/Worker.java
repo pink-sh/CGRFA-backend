@@ -1,8 +1,5 @@
 package org.fao.fir.cgrfa.sql;
 
-
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -20,18 +17,7 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.imageio.ImageIO;
-
 import org.apache.ibatis.exceptions.TooManyResultsException;
-import org.apache.pdfbox.exceptions.COSVisitorException;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.pdfbox.pdmodel.graphics.xobject.PDPixelMap;
-import org.apache.pdfbox.pdmodel.graphics.xobject.PDXObjectImage;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -75,8 +61,18 @@ public class Worker {
 	
 	PersistanceInterface in;
 	
+	String logFile;
+	
 	public Worker() {
 		in = new PersistanceImplementation();
+	}
+	
+	public void setLogfile(String logFile) {
+		this.logFile = logFile;
+	}
+	
+	public String getLogFile() {
+		return this.logFile;
 	}
 	
 	public LinkedList<SurveyList> getListOfSurvey() {
@@ -92,6 +88,12 @@ public class Worker {
 			if (storedSurvey.getName() != null) {
 				try {
 					singleSurvey.setOriginalPDF(Base64.getEncoder().encodeToString(storedSurvey.getName().getBytes("utf-8")));
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
+			}if (storedSurvey.getLogFile() != null) {
+				try {
+					singleSurvey.setLogFile(Base64.getEncoder().encodeToString(storedSurvey.getLogFile().getBytes("utf-8")));
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
 				}
@@ -590,6 +592,7 @@ public class Worker {
 			survey.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(questionList.getDate()));
 			survey.setName(questionList.getNewFileName());
 			survey.setPreparedBy(questionList.getPreparedBy());
+			survey.setLogFile(this.logFile);
 			survey.setDeleted(0);
 			
 			Survey exists = in.getSurveyHeadersByCountry(survey.getCountry());
@@ -1433,8 +1436,8 @@ public class Worker {
 		return returnList;
 	}
 	
-	public String getStatusReport() throws IOException, COSVisitorException {
-		File temp = File.createTempFile("cgrfa_report", ".pdf");
+	public String getStatusReport() throws IOException {
+		/*File temp = File.createTempFile("cgrfa_report", ".pdf");
 		ClassLoader classLoader = getClass().getClassLoader();
 		
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -1516,7 +1519,8 @@ public class Worker {
 		document.save(temp.getAbsolutePath());
 		document.close();
 
-        return temp.getAbsolutePath();
+        return temp.getAbsolutePath();*/
+		return null;
 	}
 	
 	public PDFQuestionList parsePDF(String pdfFile) {
@@ -1525,7 +1529,7 @@ public class Worker {
 		
 		List<Questions> dbQuestions = in.getAllQuestions(); 
 		try {
-			XFA_Parser parser = new XFA_Parser(pdfFile);
+			XFA_Parser parser = new XFA_Parser(pdfFile, this.getLogFile());
 			parser.parse();
 			
 			//Subform tree = parser.getTree();
@@ -2128,7 +2132,12 @@ public class Worker {
 				chkVals += f.getValue() + ",";
 			} else if (f.getName().equals("CheckBox1") && !f.getValue().equalsIgnoreCase("0")) {
 				chkVals += f.getValue() + ",";
+			} else if(f.getName().equals("q8_sf1")) {
+				chkVals = f.getValue();
+				chkVals = chkVals.replaceAll("0,", "");
+				chkVals = chkVals.replaceAll(",0", "");
 			}
+			
 		}
 		chkVals = chkVals.replaceAll("(,)*$", "");
 		PDFField field = new PDFField();

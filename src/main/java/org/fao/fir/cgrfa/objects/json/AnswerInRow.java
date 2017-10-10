@@ -2,9 +2,34 @@ package org.fao.fir.cgrfa.objects.json;
 
 import lombok.Data;
 
-public @Data class AnswerInRow {
-	String id;
-	String value;
-	String value_opt;
-	int multiRowIndex;
+@Data
+public class AnswerInRow {
+	private String id;
+	private String value;
+	private String value_opt;
+	private int multiRowIndex;
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getValue() {
+		return value;
+	}
+	public void setValue(String value) {
+		this.value = value;
+	}
+	public String getValue_opt() {
+		return value_opt;
+	}
+	public void setValue_opt(String value_opt) {
+		this.value_opt = value_opt;
+	}
+	public int getMultiRowIndex() {
+		return multiRowIndex;
+	}
+	public void setMultiRowIndex(int multiRowIndex) {
+		this.multiRowIndex = multiRowIndex;
+	}
 }
